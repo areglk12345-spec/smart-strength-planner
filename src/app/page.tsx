@@ -74,6 +74,7 @@ export default async function Home() {
                                 { href: '/routines', label: 'ตารางฝึก' },
                                 { href: '/calendar', label: '📅 ปฏิทิน' },
                                 { href: '/goals', label: '🎯 เป้าหมาย' },
+                                { href: '/leaderboard', label: '👥 Leaderboard' },
                                 { href: '/profile', label: 'โปรไฟล์' },
                             ].map(link => (
                                 <Link key={link.href} href={link.href}
@@ -141,6 +142,7 @@ export default async function Home() {
                             { href: '/routines', icon: '🗓️', label: 'ตารางฝึก', gradient: 'from-emerald-600 to-teal-500' },
                             { href: '/progress', icon: '📊', label: 'พัฒนาการ', gradient: 'from-purple-600 to-violet-500' },
                             { href: '/goals', icon: '🎯', label: 'เป้าหมาย', gradient: 'from-orange-500 to-rose-500' },
+                            { href: '/leaderboard', icon: '👥', label: 'แข่งกับเพื่อน', gradient: 'from-indigo-600 to-blue-500' },
                         ].map(action => (
                             <Link key={action.href} href={action.href}
                                 className={`animate-fade-in-up bg-gradient-to-br ${action.gradient} text-white rounded-2xl p-4 flex flex-col items-center gap-2 font-semibold text-sm shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-200`}>

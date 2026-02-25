@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ProfileForm } from './components/ProfileForm'
 import { WeightLogForm } from './components/WeightLogForm'
 import { ThemeToggle } from '../components/ThemeToggle'
+import { PushNotificationToggle } from '../components/PushNotificationToggle'
 
 interface WeightLog {
     id: string
@@ -157,6 +158,11 @@ export default async function ProfilePage() {
                                 height={profile?.height ?? null}
                                 experienceLevel={profile?.experience_level ?? null}
                             />
+
+                            <div className="mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">
+                                <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2">ตั้งค่าแอปพลิเคชัน</h3>
+                                <PushNotificationToggle />
+                            </div>
                         </div>
                     </div>
 
