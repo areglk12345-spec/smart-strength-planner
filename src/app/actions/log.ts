@@ -229,3 +229,78 @@ function calculateBestStreak(sortedDatesDesc: string[]): number {
     }
     return best
 }
+
+// ── Phase 13: Volume Tracker ──────────────────────────────────────────────────
+
+export async function getVolumeStats(days = 30) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    const sinceStr = since.toISOString().split('T')[0]
+
+    const { data: logs } = await supabase
+        .from('workout_logs')
+        .select(`
+            date,
+            workout_log_exercises ( sets, reps, weight )
+        `)
+        .eq('user_id', user.id)
+        .gte('date', sinceStr)
+        .order('date', { ascending: true })
+
+    if (!logs) return []
+
+    // Group by date and sum volume = sets × reps × weight
+    const byDate: Record<string, number> = {}
+    for (const log of logs) {
+        const vol = (log.workout_log_exercises ?? []).reduce((sum: number, ex: any) => {
+            const s = Number(ex.sets) || 1
+            const r = Number(ex.reps) || 0
+            const w = Number(ex.weight) || 0
+            return sum + s * r * w
+        }, 0)
+        byDate[log.date] = (byDate[log.date] ?? 0) + vol
+    }
+
+    return Object.entries(byDate).map(([date, volume]) => ({ date, volume }))
+}
+
+// ── Phase 14: Muscle Group Heatmap ───────────────────────────────────────────
+
+export async function getMuscleSetCounts(days = 30) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return {}
+
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+    const sinceStr = since.toISOString().split('T')[0]
+
+    const { data: logs } = await supabase
+        .from('workout_logs')
+        .select(`
+            date,
+            workout_log_exercises (
+                sets,
+                exercises ( muscle_group )
+            )
+        `)
+        .eq('user_id', user.id)
+        .gte('date', sinceStr)
+
+    if (!logs) return {}
+
+    const counts: Record<string, number> = {}
+    for (const log of logs) {
+        for (const ex of (log.workout_log_exercises ?? []) as any[]) {
+            const mg = ex.exercises?.muscle_group
+            if (!mg) continue
+            counts[mg] = (counts[mg] ?? 0) + (Number(ex.sets) || 1)
+        }
+    }
+
+    return counts
+}
