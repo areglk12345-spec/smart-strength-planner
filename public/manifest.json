@@ -1,0 +1,55 @@
+{
+    "name": "Smart Strength Planner",
+    "short_name": "StrengthApp",
+    "description": "ออกแบบโปรแกรมการฝึกและติดตามความก้าวหน้าของคุณ",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#3b82f6",
+    "orientation": "portrait-primary",
+    "categories": [
+        "health",
+        "fitness",
+        "sports"
+    ],
+    "icons": [
+        {
+            "src": "/icons/icon-192.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-512.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "บันทึกการฝึก",
+            "short_name": "บันทึก",
+            "description": "เพิ่มบันทึกการออกกำลังกายใหม่",
+            "url": "/logs/new",
+            "icons": [
+                {
+                    "src": "/icons/icon-192.svg",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "พัฒนาการ",
+            "short_name": "Progress",
+            "description": "ดูกราฟพัฒนาการ",
+            "url": "/progress",
+            "icons": [
+                {
+                    "src": "/icons/icon-192.svg",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ]
+}
