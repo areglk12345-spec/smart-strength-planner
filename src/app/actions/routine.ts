@@ -116,3 +116,28 @@ export async function cloneRoutine(sourceRoutineId: string) {
     revalidatePath('/routines')
     return { success: true, newRoutineId: newRoutine.id }
 }
+
+export async function getPublicRoutines() {
+    const supabase = await createClient()
+
+    const { data: routines, error } = await supabase
+        .from('routines')
+        .select(`
+            id,
+            name,
+            description,
+            user_id,
+            profiles ( name, avatar_url ),
+            routine_exercises ( exercises ( name, muscle_group ) )
+        `)
+        .eq('is_public', true)
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+    if (error) {
+        console.error('Error fetching public routines:', error)
+        return []
+    }
+
+    return routines
+}

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { RemoveFromRoutineButton } from '../components/RemoveFromRoutineButton'
 import { TogglePublicButton } from '../components/TogglePublicButton'
 import { ThemeToggle } from '../../components/ThemeToggle'
+import { CloneRoutineButton } from '../components/CloneRoutineButton'
 
 interface Routine {
     id: string
@@ -19,7 +20,10 @@ async function getRoutineDetails(id: string) {
     if (!user) return { routine: null, exercises: null }
 
     const { data: routine } = await supabase.from('routines').select('*').eq('id', id).single()
-    if (!routine || routine.user_id !== user.id) return { routine: null, exercises: null }
+    if (!routine) return { routine: null, exercises: null, isOwner: false }
+
+    const isOwner = user?.id === routine.user_id
+    if (!isOwner && !routine.is_public) return { routine: null, exercises: null, isOwner: false }
 
     const { data: routineExercises } = await supabase
         .from('routine_exercises')
@@ -32,12 +36,12 @@ async function getRoutineDetails(id: string) {
         order_index: re.order_index
     }))
 
-    return { routine: routine as Routine, exercises }
+    return { routine: routine as Routine, exercises, isOwner }
 }
 
 export default async function RoutineDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
-    const { routine, exercises } = await getRoutineDetails(id)
+    const { routine, exercises, isOwner } = await getRoutineDetails(id)
     if (!routine) notFound()
 
     return (
@@ -66,7 +70,7 @@ export default async function RoutineDetailsPage({ params }: { params: Promise<{
                                 <Link href="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 px-4 py-2 rounded-md transition shadow-sm">
                                     + เพิ่มท่า
                                 </Link>
-                                {exercises && exercises.length > 0 && (
+                                {isOwner && exercises && exercises.length > 0 && (
                                     <Link href={`/logs/new?routine_id=${routine.id}`} className="text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition shadow-sm flex items-center shadow-blue-500/30">
                                         💪 เริ่มฝึกตามตารางนี้
                                     </Link>
@@ -77,9 +81,11 @@ export default async function RoutineDetailsPage({ params }: { params: Promise<{
                         {!exercises || exercises.length === 0 ? (
                             <div className="bg-gray-50 dark:bg-gray-700 p-8 rounded-lg text-center border border-dashed border-gray-300 dark:border-gray-600">
                                 <p className="text-gray-500 dark:text-gray-400 mb-4">ยังไม่ได้เพิ่มท่าออกกำลังกายในตารางนี้</p>
-                                <Link href="/" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                                    ไปที่หน้าแรกเพื่อเลือกท่า
-                                </Link>
+                                {isOwner && (
+                                    <Link href="/" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
+                                        ไปที่หน้าแรกเพื่อเลือกท่า
+                                    </Link>
+                                )}
                             </div>
                         ) : (
                             <ul className="space-y-3">
@@ -99,7 +105,7 @@ export default async function RoutineDetailsPage({ params }: { params: Promise<{
                                                 </div>
                                             </div>
                                         </div>
-                                        <RemoveFromRoutineButton routineId={routine.id} exerciseId={ex.id} />
+                                        {isOwner && <RemoveFromRoutineButton routineId={routine.id} exerciseId={ex.id} />}
                                     </li>
                                 ))}
                             </ul>
@@ -107,15 +113,25 @@ export default async function RoutineDetailsPage({ params }: { params: Promise<{
                     </div>
                 </div>
 
-                {/* Share Section */}
+                {/* Share / Copy Section */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                    <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-1 flex items-center gap-2">
-                        <span>🔗</span> แชร์ตารางฝึกนี้
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                        ทำให้ตารางเป็น Public เพื่อแชร์ URL ให้คนอื่นดูและ Clone ได้
-                    </p>
-                    <TogglePublicButton routineId={routine.id} isPublic={routine.is_public} />
+                    {isOwner ? (
+                        <>
+                            <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-1 flex items-center gap-2">
+                                <span>🔗</span> แชร์ตารางฝึกนี้
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                ทำให้ตารางเป็น Public เพื่อแชร์ URL ให้คนอื่นดูและ Clone ได้
+                            </p>
+                            <TogglePublicButton routineId={routine.id} isPublic={routine.is_public} />
+                        </>
+                    ) : (
+                        <div className="text-center">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">💡 ถูกใจตารางฝึกนี้ไหม?</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">คุณสามารถคัดลอกตารางนี้ลงในบัญชีของคุณเพื่อนำไปใช้และปรับแต่งต่อได้</p>
+                            <CloneRoutineButton routineId={routine.id} isLoggedIn={true} />
+                        </div>
+                    )}
                 </div>
             </div>
         </main>
