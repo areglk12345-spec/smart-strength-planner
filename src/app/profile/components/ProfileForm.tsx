@@ -2,30 +2,46 @@
 
 import { useState } from 'react'
 import { upsertProfile } from '@/app/actions/profile'
+import { useToast } from '@/app/components/Toast'
 
 export function ProfileForm({
     displayName,
     goal,
     height,
-    experienceLevel
+    experienceLevel,
+    avatarUrl
 }: {
     displayName: string | null
     goal: string | null
     height: number | null
     experienceLevel: string | null
+    avatarUrl: string | null
 }) {
     const [loading, setLoading] = useState(false)
     const [saved, setSaved] = useState(false)
+    const { toast } = useToast()
 
     async function handleSubmit(formData: FormData) {
         setLoading(true)
         const res = await upsertProfile(formData)
         setLoading(false)
-        if (res?.error) { alert(res.error) } else { setSaved(true); setTimeout(() => setSaved(false), 3000) }
+        if (res?.error) {
+            toast(res.error, 'error')
+        } else {
+            toast('บันทึกโปรไฟล์เรียบร้อย!', 'success')
+            setSaved(true)
+            setTimeout(() => setSaved(false), 3000)
+        }
     }
 
     return (
         <form action={handleSubmit} className="space-y-4">
+            <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">รูปโปรไฟล์ (Avatar URL)</label>
+                <input name="avatar_url" type="url" defaultValue={avatarUrl || ''} placeholder="ใส่ลิ้งก์รูปภาพ (https://...) หรือ Emoji"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <p className="text-xs text-gray-400 mt-1 mt-1">แนะนำลิ้งก์ภาพสี่เหลี่ยมจตุรัส หรือใส่อีโมจิที่ชอบ</p>
+            </div>
             <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">ชื่อที่ใช้แสดง (Name)</label>
                 <input name="display_name" type="text" defaultValue={displayName || ''} placeholder="เช่น อาร์ม นักยก"

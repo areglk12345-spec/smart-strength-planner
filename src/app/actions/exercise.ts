@@ -40,6 +40,39 @@ export async function addExercise(formData: FormData) {
     return { success: true }
 }
 
+export async function updateExercise(id: string, formData: FormData) {
+    const supabase = await createClient()
+
+    const name = formData.get('name')?.toString()
+    const muscle_group = formData.get('muscle_group')?.toString()
+    const type = formData.get('type')?.toString()
+    const description = formData.get('description')?.toString()
+    const youtube_url = formData.get('youtube_url')?.toString() || null
+
+    if (!name || !muscle_group || !type) {
+        return { error: 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน' }
+    }
+
+    const { error } = await supabase
+        .from('exercises')
+        .update({
+            name,
+            muscle_group,
+            type,
+            description: description || '',
+            youtube_url,
+        })
+        .eq('id', id)
+
+    if (error) {
+        console.error('Error updating exercise:', error)
+        return { error: 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล' }
+    }
+
+    revalidatePath('/')
+    return { success: true }
+}
+
 export async function deleteExercise(id: string) {
     const supabase = await createClient()
 

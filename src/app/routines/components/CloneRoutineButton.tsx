@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { cloneRoutine } from '@/app/actions/routine'
+import { useToast } from '@/app/components/Toast'
 
 export function CloneRoutineButton({ routineId, isLoggedIn }: { routineId: string; isLoggedIn: boolean }) {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+    const { toast } = useToast()
 
     async function handleClone() {
         if (!isLoggedIn) {
@@ -17,8 +19,9 @@ export function CloneRoutineButton({ routineId, isLoggedIn }: { routineId: strin
         const res = await cloneRoutine(routineId)
         setLoading(false)
         if (res.error) {
-            alert(res.error)
+            toast(res.error, 'error')
         } else if (res.newRoutineId) {
+            toast('คัดลอกตารางฝึกเรียบร้อย 🚀', 'success')
             router.push(`/routines/${res.newRoutineId}`)
         }
     }

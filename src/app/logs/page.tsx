@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ThemeToggle } from '../components/ThemeToggle'
+import { WorkoutLogCard } from './components/WorkoutLogCard'
 
 interface WorkoutLog {
     id: string
@@ -63,57 +64,9 @@ export default async function LogsHistoryPage() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        {logs.map(log => {
-                            const dateObj = new Date(log.date)
-                            const formattedDate = dateObj.toLocaleDateString('th-TH', {
-                                year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
-                            })
-                            const routineName = Array.isArray(log.routines) ? log.routines[0]?.name : log.routines?.name
-                            return (
-                                <div key={log.id} className="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition">
-                                    <div className="flex flex-col md:flex-row justify-between md:items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
-                                        <div>
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{formattedDate}</h3>
-                                            {routineName && (
-                                                <div className="inline-block mt-2 text-xs font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 px-3 py-1 rounded-full">
-                                                    ตาราง: {routineName}
-                                                </div>
-                                            )}
-                                        </div>
-                                        {log.notes && (
-                                            <div className="mt-3 md:mt-0 text-sm italic text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600">
-                                                &quot;{log.notes}&quot;
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full text-sm text-left text-gray-600 dark:text-gray-400">
-                                            <thead className="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700 rounded-t-lg">
-                                                <tr>
-                                                    <th className="px-4 py-3 rounded-tl-lg border-b dark:border-gray-600">ท่าออกกำลังกาย</th>
-                                                    <th className="px-4 py-3 text-center border-b dark:border-gray-600">เซ็ต</th>
-                                                    <th className="px-4 py-3 text-center border-b dark:border-gray-600">ครั้ง</th>
-                                                    <th className="px-4 py-3 text-right rounded-tr-lg border-b dark:border-gray-600">น้ำหนัก (kg)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {log.workout_log_exercises.map((ex, idx) => {
-                                                    const exName = Array.isArray(ex.exercises) ? ex.exercises[0]?.name : ex.exercises?.name
-                                                    return (
-                                                        <tr key={`${log.id}-${idx}`} className="bg-white dark:bg-gray-800 border-b dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                                            <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{exName || 'ไม่ทราบชื่อท่า'}</td>
-                                                            <td className="px-4 py-3 text-center">{ex.sets}</td>
-                                                            <td className="px-4 py-3 text-center">{ex.reps}</td>
-                                                            <td className="px-4 py-3 text-right font-semibold text-blue-600 dark:text-blue-400">{ex.weight > 0 ? ex.weight : '-'}</td>
-                                                        </tr>
-                                                    )
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            )
-                        })}
+                        {logs.map(log => (
+                            <WorkoutLogCard key={log.id} log={log} />
+                        ))}
                     </div>
                 )}
             </div>

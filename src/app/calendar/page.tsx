@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
+import { EmptyState } from '../components/EmptyState'
 
 export async function getWorkoutDates(year: number, month: number): Promise<string[]> {
     const supabase = await createClient()
@@ -139,7 +140,7 @@ export default async function CalendarPage({
                 </div>
 
                 {/* Workout list this month */}
-                {workoutDates.length > 0 && (
+                {workoutDates.length > 0 ? (
                     <div className="glass-card p-4 mt-4 animate-fade-in-up">
                         <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-3 text-sm">
                             วันที่ฝึกเดือนนี้
@@ -151,6 +152,16 @@ export default async function CalendarPage({
                                 </span>
                             ))}
                         </div>
+                    </div>
+                ) : (
+                    <div className="mt-6 animate-fade-in-up">
+                        <EmptyState
+                            icon="😴"
+                            title="เดือนนี้ยังไม่ได้ฝึกเลย"
+                            description="ร่างกายรอการท้าทายอยู่! เริ่มต้นสร้างวินัยด้วยการฝึกเซสชันแรกของเดือนกัน"
+                            actionText="บันทึกการฝึก"
+                            actionHref="/logs/new"
+                        />
                     </div>
                 )}
 

@@ -5,7 +5,7 @@ import { ExerciseList } from './components/ExerciseList'
 import { DashboardStats } from './components/DashboardStats'
 import { ThemeToggle } from './components/ThemeToggle'
 import { StreakWidget } from './components/StreakWidget'
-import { getUserStreak } from './actions/log'
+import { getStreak } from './actions/streak'
 import Link from 'next/link'
 
 interface Exercise {
@@ -14,6 +14,7 @@ interface Exercise {
     muscle_group: string
     type: string
     description: string
+    youtube_url: string | null
 }
 
 async function getExercises() {
@@ -39,7 +40,7 @@ export default async function Home() {
         }
     }
 
-    const streak = user ? await getUserStreak() : { current: 0, best: 0, lastWorkout: null }
+    const streak = user ? await getStreak(user.id) : { current: 0, best: 0, lastWorkout: null }
 
     const muscleGroupCounts = exercises.reduce((acc, ex) => {
         acc[ex.muscle_group] = (acc[ex.muscle_group] || 0) + 1

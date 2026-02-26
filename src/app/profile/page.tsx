@@ -97,7 +97,7 @@ export default async function ProfilePage() {
     // Fetch profile
     const { data: profile } = await supabase
         .from('profiles')
-        .select('name, goal, height, experience_level')
+        .select('name, goal, height, experience_level, avatar_url')
         .eq('id', user.id)
         .single()
 
@@ -135,9 +135,19 @@ export default async function ProfilePage() {
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full">
                             {/* Avatar */}
                             <div className="flex flex-col items-center mb-6 pb-6 border-b border-gray-100">
-                                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-3">
-                                    {displayName ? displayName[0].toUpperCase() : user.email?.[0].toUpperCase()}
-                                </div>
+                                {profile?.avatar_url ? (
+                                    profile.avatar_url.startsWith('http') ? (
+                                        <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-full object-cover shadow-lg mb-3 border-2 border-white" />
+                                    ) : (
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center text-4xl shadow-lg mb-3 border-2 border-white dark:border-gray-600">
+                                            {profile.avatar_url}
+                                        </div>
+                                    )
+                                ) : (
+                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-3">
+                                        {displayName ? displayName[0].toUpperCase() : user.email?.[0].toUpperCase()}
+                                    </div>
+                                )}
                                 <h2 className="text-lg font-bold text-gray-900">{displayName || 'Unnamed Athlete'}</h2>
                                 {latestWeight && (
                                     <div className="mt-2 bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
@@ -157,6 +167,7 @@ export default async function ProfilePage() {
                                 goal={profile?.goal ?? null}
                                 height={profile?.height ?? null}
                                 experienceLevel={profile?.experience_level ?? null}
+                                avatarUrl={profile?.avatar_url ?? null}
                             />
 
                             <div className="mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">

@@ -12,6 +12,7 @@ export async function upsertProfile(formData: FormData) {
     const goal = formData.get('goal')?.toString() || null
     const height = formData.get('height') ? parseFloat(formData.get('height')!.toString()) : null
     const experience_level = formData.get('experience_level')?.toString() || null
+    const avatar_url = formData.get('avatar_url')?.toString() || null
 
     // Check if profile already exists
     const { data: existing } = await supabase
@@ -25,14 +26,14 @@ export async function upsertProfile(formData: FormData) {
         // Update existing profile
         const result = await supabase
             .from('profiles')
-            .update({ name, goal, height, experience_level })
+            .update({ name, goal, height, experience_level, avatar_url })
             .eq('id', user.id)
         error = result.error
     } else {
         // Insert new profile
         const result = await supabase
             .from('profiles')
-            .insert({ id: user.id, name, goal, height, experience_level })
+            .insert({ id: user.id, name, goal, height, experience_level, avatar_url })
         error = result.error
     }
 

@@ -37,8 +37,8 @@ export function LeaderboardClient({
                 <button
                     onClick={() => setTab('volume')}
                     className={`flex-1 py-3 rounded-xl text-sm font-bold transition shadow-sm ${tab === 'volume'
-                            ? 'bg-blue-600 text-white shadow-blue-500/30'
-                            : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'bg-blue-600 text-white shadow-blue-500/30'
+                        : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                         }`}
                 >
                     🏋️ Volume (30 วัน)
@@ -46,8 +46,8 @@ export function LeaderboardClient({
                 <button
                     onClick={() => setTab('prs')}
                     className={`flex-1 py-3 rounded-xl text-sm font-bold transition shadow-sm ${tab === 'prs'
-                            ? 'bg-yellow-500 text-white shadow-yellow-500/30'
-                            : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'bg-yellow-500 text-white shadow-yellow-500/30'
+                        : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                         }`}
                 >
                     🏆 Top Bench Press
@@ -98,7 +98,11 @@ export function LeaderboardClient({
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
                                                     {row.avatar_url ? (
-                                                        <img src={row.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                                                        row.avatar_url.startsWith('http') ? (
+                                                            <img src={row.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-xl">{row.avatar_url}</span>
+                                                        )
                                                     ) : (
                                                         (row.username || 'U')[0].toUpperCase()
                                                     )}

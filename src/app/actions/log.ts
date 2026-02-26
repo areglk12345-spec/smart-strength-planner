@@ -157,78 +157,7 @@ export async function getAllPersonalRecords() {
 
 // ── Phase 8: Workout Streak ───────────────────────────────────────────────────
 
-export async function getUserStreak() {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { current: 0, best: 0, lastWorkout: null as string | null }
-
-    // Fetch all distinct workout dates, sorted descending
-    const { data, error } = await supabase
-        .from('workout_logs')
-        .select('date')
-        .eq('user_id', user.id)
-        .order('date', { ascending: false })
-
-    if (error || !data || data.length === 0) return { current: 0, best: 0, lastWorkout: null }
-
-    // Deduplicate dates
-    const uniqueDates = [...new Set(data.map(d => d.date))].sort((a, b) => b.localeCompare(a))
-    const lastWorkout = uniqueDates[0]
-
-    // Count current streak
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    let current = 0
-    let cursor = new Date(uniqueDates[0])
-    cursor.setHours(0, 0, 0, 0)
-
-    // Streak valid if last workout was today or yesterday
-    const diffFromToday = Math.round((today.getTime() - cursor.getTime()) / 86400000)
-    if (diffFromToday > 1) {
-        // Streak broken
-        return { current: 0, best: calculateBestStreak(uniqueDates), lastWorkout }
-    }
-
-    // Walk backwards counting consecutive days
-    for (let i = 0; i < uniqueDates.length; i++) {
-        const d = new Date(uniqueDates[i])
-        d.setHours(0, 0, 0, 0)
-        const expected = new Date(cursor)
-        expected.setDate(expected.getDate() - (i === 0 ? 0 : 1))
-
-        if (i === 0) {
-            current = 1
-        } else {
-            const prev = new Date(uniqueDates[i - 1])
-            prev.setHours(0, 0, 0, 0)
-            const gap = Math.round((prev.getTime() - d.getTime()) / 86400000)
-            if (gap === 1) {
-                current++
-            } else {
-                break
-            }
-        }
-    }
-
-    return { current, best: Math.max(current, calculateBestStreak(uniqueDates)), lastWorkout }
-}
-
-function calculateBestStreak(sortedDatesDesc: string[]): number {
-    if (sortedDatesDesc.length === 0) return 0
-    let best = 1
-    let streak = 1
-    for (let i = 1; i < sortedDatesDesc.length; i++) {
-        const prev = new Date(sortedDatesDesc[i - 1])
-        const curr = new Date(sortedDatesDesc[i])
-        prev.setHours(0, 0, 0, 0)
-        curr.setHours(0, 0, 0, 0)
-        const gap = Math.round((prev.getTime() - curr.getTime()) / 86400000)
-        if (gap === 1) { streak++; best = Math.max(best, streak) }
-        else { streak = 1 }
-    }
-    return best
-}
+// ── Phase 8: Workout Streak (Moved to actions/streak.ts) ──────────────────────
 
 // ── Phase 13: Volume Tracker ──────────────────────────────────────────────────
 
@@ -303,4 +232,65 @@ export async function getMuscleSetCounts(days = 30) {
     }
 
     return counts
+}
+
+// ── Phase 22: CRUD for Workout Logs ─────────────────────────────────────────
+
+export async function deleteWorkoutLog(id: string) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    // Ensure the log belongs to the user
+    const { data: logCheck } = await supabase
+        .from('workout_logs')
+        .select('id')
+        .eq('id', id)
+        .eq('user_id', user.id)
+        .single()
+
+    if (!logCheck) return { error: 'ไม่พบประวัติการฝึก หรือคุณไม่มีสิทธิ์ลบ' }
+
+    // Deleting the log will cascade and delete workout_log_exercises automatically via Supabase FK (if configured)
+    // Even if not, we can just delete the log explicitly. The best practice is cascade.
+    const { error } = await supabase
+        .from('workout_logs')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Error deleting workout log:', error)
+        return { error: 'เกิดข้อผิดพลาดในการลบประวัติการฝึก' }
+    }
+
+    revalidatePath('/logs')
+    revalidatePath('/progress')
+    return { success: true }
+}
+
+export async function updateWorkoutLog(id: string, formData: FormData) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    const date = formData.get('date')?.toString()
+    const notes = formData.get('notes')?.toString()
+
+    if (!date) return { error: 'วันที่จำเป็นต้องระบุ' }
+
+    const { error } = await supabase
+        .from('workout_logs')
+        .update({ date, notes: notes || null })
+        .eq('id', id)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Error updating workout log:', error)
+        return { error: 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล' }
+    }
+
+    revalidatePath('/logs')
+    revalidatePath('/progress')
+    return { success: true }
 }

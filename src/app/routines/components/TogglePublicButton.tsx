@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { toggleRoutinePublic } from '@/app/actions/routine'
+import { useToast } from '@/app/components/Toast'
 
 export function TogglePublicButton({ routineId, isPublic }: { routineId: string; isPublic: boolean }) {
     const [loading, setLoading] = useState(false)
     const [currentPublic, setCurrentPublic] = useState(isPublic)
     const [copied, setCopied] = useState(false)
+    const { toast } = useToast()
 
     const publicUrl = typeof window !== 'undefined'
         ? `${window.location.origin}/routines/${routineId}/public`
@@ -17,9 +19,10 @@ export function TogglePublicButton({ routineId, isPublic }: { routineId: string;
         const res = await toggleRoutinePublic(routineId, currentPublic)
         setLoading(false)
         if (res.error) {
-            alert(res.error)
+            toast(res.error, 'error')
         } else {
             setCurrentPublic(res.is_public ?? !currentPublic)
+            toast(res.is_public ? 'เปิดสาธารณะแล้ว' : 'ซ่อนเป็นส่วนตัวแล้ว', 'success')
         }
     }
 
@@ -35,8 +38,8 @@ export function TogglePublicButton({ routineId, isPublic }: { routineId: string;
                 onClick={handleToggle}
                 disabled={loading}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm disabled:opacity-50 ${currentPublic
-                        ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/60'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/60'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
             >
                 <span>{loading ? '⏳' : currentPublic ? '🌐' : '🔒'}</span>

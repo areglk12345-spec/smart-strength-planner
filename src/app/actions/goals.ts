@@ -77,3 +77,31 @@ export async function getCurrentBestForExercise(exerciseId: string): Promise<num
 
     return data?.[0]?.weight ?? 0
 }
+
+// ── Phase 22: CRUD for Goals ──────────────────────────────────────────────────
+
+export async function updateGoal(id: string, formData: FormData) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    const target_weight = Number(formData.get('target_weight'))
+    const target_date = formData.get('target_date') as string || null
+    const notes = formData.get('notes') as string || null
+
+    if (!target_weight) return { error: 'กรุณาระบุน้ำหนักเป้าหมาย' }
+
+    const { error } = await supabase
+        .from('goals')
+        .update({ target_weight, target_date, notes })
+        .eq('id', id)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Error updating goal:', error)
+        return { error: 'เกิดข้อผิดพลาดในการแก้ไขเป้าหมาย' }
+    }
+
+    revalidatePath('/goals')
+    return { success: true }
+}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createWorkoutLog } from '@/app/actions/log'
 import { PRCelebration } from '@/app/components/PRCelebration'
+import { useToast } from '@/app/components/Toast'
 
 interface ExerciseType { id: string; name: string }
 interface LoggedExercise { exercise_id: string; name: string; sets: number; reps: number; weight: number }
@@ -20,6 +21,7 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
     const [exercises, setExercises] = useState<LoggedExercise[]>(initialExercises)
     const [prs, setPrs] = useState<{ exerciseName: string; weight: number; exerciseId: string }[]>([])
     const router = useRouter()
+    const { toast } = useToast()
 
     const addExerciseRow = () => {
         if (allExercises.length === 0) return
@@ -40,7 +42,7 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        if (exercises.length === 0) { alert('กรุณาเพิ่มท่าออกกำลังกายอย่างน้อย 1 ท่า'); return }
+        if (exercises.length === 0) { toast('กรุณาเพิ่มท่าออกกำลังกายอย่างน้อย 1 ท่า', 'warning'); return }
         setLoading(true)
         const formData = new FormData()
         formData.append('date', date)
@@ -51,9 +53,11 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
         setLoading(false)
 
         if (res?.error) {
-            alert(res.error)
+            toast(res.error, 'error')
             return
         }
+
+        toast('บันทึกสถิติสำเร็จ!', 'success')
 
         // Show PR celebration if any PRs were achieved
         if (res?.prs && res.prs.length > 0) {
@@ -115,7 +119,7 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
                                     </div>
                                     <div className="w-full md:w-32">
                                         <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">น้ำหนัก (กิโล)</label>
-                                        <input type="number" step="0.5" min="0" value={ex.weight} onChange={e => updateExercise(idx, 'weight', e.target.value)} className={inputClass} />
+                                        <input type="number" step="0.5" min="0" value={ex.weight} onChange={e => updateExercise(idx, 'weight', e.target.value)} autoFocus={idx === 0} className={inputClass} />
                                     </div>
                                     <button type="button" onClick={() => removeExerciseRow(idx)}
                                         className="w-full md:w-auto px-3 py-2 bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 rounded text-sm font-medium transition">

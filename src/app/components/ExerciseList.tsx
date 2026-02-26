@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { DeleteButton } from './DeleteButton'
+import { EditExerciseModal } from './EditExerciseModal'
 
 interface Exercise {
     id: string;
@@ -10,6 +11,7 @@ interface Exercise {
     muscle_group: string;
     type: string;
     description: string;
+    youtube_url: string | null;
 }
 
 export function ExerciseList({
@@ -21,6 +23,7 @@ export function ExerciseList({
 }) {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedMuscle, setSelectedMuscle] = useState('All')
+    const [editingExercise, setEditingExercise] = useState<Exercise | null>(null)
 
     const muscleGroups = ['All', ...Array.from(new Set(initialExercises.map(ex => ex.muscle_group)))]
 
@@ -32,6 +35,14 @@ export function ExerciseList({
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+            {editingExercise && (
+                <EditExerciseModal
+                    exercise={editingExercise}
+                    isOpen={!!editingExercise}
+                    onClose={() => setEditingExercise(null)}
+                />
+            )}
+
             <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">ท่าออกกำลังกายพื้นฐาน (จากฐานข้อมูล)</h2>
 
             <div className="mb-6 space-y-4">
@@ -49,8 +60,8 @@ export function ExerciseList({
                             key={muscle}
                             onClick={() => setSelectedMuscle(muscle)}
                             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${selectedMuscle === muscle
-                                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                                    : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
+                                ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                                 }`}
                         >
                             {muscle}
@@ -92,7 +103,16 @@ export function ExerciseList({
                                         >
                                             ดูรายละเอียด →
                                         </Link>
-                                        <DeleteButton id={exercise.id} />
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <button
+                                                onClick={() => setEditingExercise(exercise)}
+                                                className="text-gray-400 hover:text-blue-500 transition text-sm p-1"
+                                                title="แก้ไขท่า"
+                                            >
+                                                ✏️
+                                            </button>
+                                            <DeleteButton id={exercise.id} />
+                                        </div>
                                     </div>
                                 )}
                             </div>

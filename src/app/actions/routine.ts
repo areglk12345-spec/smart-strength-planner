@@ -117,6 +117,34 @@ export async function cloneRoutine(sourceRoutineId: string) {
     return { success: true, newRoutineId: newRoutine.id }
 }
 
+// ── Phase 22: CRUD for Routines ──────────────────────────────────────────────
+
+export async function updateRoutine(id: string, formData: FormData) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    const name = formData.get('name')?.toString()
+    const description = formData.get('description')?.toString() || ''
+
+    if (!name) return { error: 'ชื่อตารางฝึกจำเป็นต้องระบุ' }
+
+    const { error } = await supabase
+        .from('routines')
+        .update({ name, description })
+        .eq('id', id)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Error updating routine:', error)
+        return { error: 'เกิดข้อผิดพลาดในการแก้ไขตารางฝึก' }
+    }
+
+    revalidatePath('/routines')
+    revalidatePath(`/routines/${id}`)
+    return { success: true }
+}
+
 export async function getPublicRoutines() {
     const supabase = await createClient()
 

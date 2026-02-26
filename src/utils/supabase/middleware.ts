@@ -34,7 +34,7 @@ export async function updateSession(request: NextRequest) {
 
     // Protect dashboard routes (require auth)
     // For example, if we want to protect the root page and other internal pages
-    const isAuthPage = request.nextUrl.pathname.startsWith('/login')
+    const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup')
     // Never redirect PWA/static files
     const isPublicFile = ['/manifest.json', '/sw.js'].includes(request.nextUrl.pathname) ||
         request.nextUrl.pathname.startsWith('/icons/') ||

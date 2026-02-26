@@ -6,6 +6,7 @@ import { CreateRoutineForm } from './CreateRoutineForm'
 import { DeleteRoutineButton } from './DeleteRoutineButton'
 import { cloneRoutine } from '../../actions/routine'
 import { useRouter } from 'next/navigation'
+import { useToast } from '../../components/Toast'
 
 export function RoutinesTabs({
     activeTab,
@@ -21,14 +22,16 @@ export function RoutinesTabs({
     const [tab, setTab] = useState(activeTab)
     const [cloningId, setCloningId] = useState<string | null>(null)
     const router = useRouter()
+    const { toast } = useToast()
 
     async function handleClone(id: string) {
         setCloningId(id)
         const res = await cloneRoutine(id)
         setCloningId(null)
         if (res.error) {
-            alert(res.error)
+            toast(res.error, 'error')
         } else if (res.newRoutineId) {
+            toast('คัดลอกแบบฝึกสำเร็จ!', 'success')
             router.push(`/routines/${res.newRoutineId}`)
         }
     }
@@ -40,8 +43,8 @@ export function RoutinesTabs({
                 <button
                     onClick={() => setTab('mine')}
                     className={`flex-1 py-3 rounded-xl text-sm font-bold transition shadow-sm ${tab === 'mine'
-                            ? 'bg-blue-600 text-white shadow-blue-500/30'
-                            : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'bg-blue-600 text-white shadow-blue-500/30'
+                        : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                         }`}
                 >
                     👤 ตารางของฉัน
@@ -49,8 +52,8 @@ export function RoutinesTabs({
                 <button
                     onClick={() => setTab('explore')}
                     className={`flex-1 py-3 rounded-xl text-sm font-bold transition shadow-sm ${tab === 'explore'
-                            ? 'bg-emerald-600 text-white shadow-emerald-500/30'
-                            : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                        ? 'bg-emerald-600 text-white shadow-emerald-500/30'
+                        : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                         }`}
                 >
                     🌍 สำรวจชุมชน

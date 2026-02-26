@@ -6,6 +6,7 @@ import { getAllExercisesWithProgress, getExerciseProgress, getAllPersonalRecords
 import { ProgressChart } from '../components/ProgressChart'
 import { VolumeChart } from '../components/VolumeChart'
 import { MuscleHeatmap } from '../components/MuscleHeatmap'
+import { EmptyState } from '../components/EmptyState'
 
 const TABS = [
     { key: 'chart', label: '📈 กราฟ', activeColor: 'bg-blue-600 text-white shadow-blue-500/30' },
@@ -55,8 +56,8 @@ export default async function ProgressPage({
                         <Link key={t.key}
                             href={`/progress?tab=${t.key}${activeTab === 'chart' && selectedId ? `&ex=${selectedId}` : ''}`}
                             className={`px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm ${activeTab === t.key
-                                    ? t.activeColor
-                                    : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                                ? t.activeColor
+                                : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                                 }`}>
                             {t.label}
                         </Link>
@@ -89,9 +90,14 @@ export default async function ProgressPage({
                         </div>
 
                         {allPRs.length === 0 ? (
-                            <div className="p-12 text-center text-gray-500 dark:text-gray-400">
-                                <div className="text-4xl mb-3">🏋️</div>
-                                <p>ยังไม่มีสถิติ — บันทึกการฝึกเพื่อเริ่มสะสม PR!</p>
+                            <div className="p-6">
+                                <EmptyState
+                                    icon="🏋️"
+                                    title="ยังไม่มีสถิติส่วนตัว"
+                                    description="คุณต้องทำลายสถิติน้ำหนักสูงสุดของท่าออกกำลังกายก่อน จึงจะแสดงในกระดานนี้ เริ่มบันทึกการฝึกเพื่อสะสมสถิติกันเลย!"
+                                    actionText="บันทึกสถิติวันนี้"
+                                    actionHref="/logs/new"
+                                />
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
@@ -138,10 +144,14 @@ export default async function ProgressPage({
                 {/* ── Chart Tab ── */}
                 {activeTab === 'chart' && (
                     exercises.length === 0 ? (
-                        <div className="glass-card p-12 text-center animate-fade-in-up">
-                            <div className="text-5xl mb-4">📝</div>
-                            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">ยังไม่มีข้อมูลการฝึก</h2>
-                            <Link href="/logs/new" className="btn-primary inline-block mt-4 px-6 py-2 rounded-xl">+ บันทึกการฝึก</Link>
+                        <div className="animate-fade-in-up mt-8">
+                            <EmptyState
+                                icon="📈"
+                                title="ยังไม่มีข้อมูลกราฟสถิติ"
+                                description="กราฟจะแสดงพัฒนาการของคุณหลังจากที่ได้บันทึกการยกน้ำหนักของท่าต่างๆ แล้ว"
+                                actionText="เริ่มต้นบันทึกการฝึก"
+                                actionHref="/logs/new"
+                            />
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fade-in-up">
