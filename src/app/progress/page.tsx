@@ -9,10 +9,10 @@ import { MuscleHeatmap } from '../components/MuscleHeatmap'
 import { EmptyState } from '../components/EmptyState'
 
 const TABS = [
-    { key: 'chart', label: '📈 กราฟ', activeColor: 'bg-blue-600 text-white shadow-blue-500/30' },
-    { key: 'prs', label: '🏆 PRs', activeColor: 'bg-yellow-500 text-white shadow-yellow-500/30' },
-    { key: 'volume', label: '⚖️ Volume', activeColor: 'bg-purple-600 text-white shadow-purple-500/30' },
-    { key: 'heat', label: '📊 Heatmap', activeColor: 'bg-rose-500 text-white shadow-rose-500/30' },
+    { key: 'chart', label: '📈 กราฟ', activeColor: 'bg-blue-600 dark:bg-red-600 text-white shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.3)]' },
+    { key: 'prs', label: '🏆 PRs', activeColor: 'bg-yellow-500 dark:bg-yellow-600 text-white shadow-yellow-500/30 dark:shadow-[0_4px_15px_rgba(202,138,4,0.3)]' },
+    { key: 'volume', label: '⚖️ Volume', activeColor: 'bg-purple-600 dark:bg-purple-700 text-white shadow-purple-500/30 dark:shadow-[0_4px_15px_rgba(126,34,206,0.3)]' },
+    { key: 'heat', label: '📊 Heatmap', activeColor: 'bg-rose-500 dark:bg-rose-600 text-white shadow-rose-500/30 dark:shadow-[0_4px_15px_rgba(225,29,72,0.3)]' },
 ]
 
 export default async function ProgressPage({
@@ -39,25 +39,25 @@ export default async function ProgressPage({
     const activeExercise = exercises.find(e => e.id === activeId)
 
     return (
-        <main className="min-h-screen bg-mesh px-4 py-8 text-gray-900 dark:text-gray-100">
+        <main className="min-h-screen bg-mesh px-4 py-8 text-gray-900 dark:text-zinc-100">
             <div className="max-w-5xl mx-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6 animate-fade-in-up">
+                <div className="flex items-start sm:items-center justify-between mb-8 animate-fade-in-up flex-col sm:flex-row gap-4">
                     <div>
-                        <Link href="/" className="text-sm text-blue-500 hover:underline mb-1 block">← หน้าหลัก</Link>
-                        <h1 className="text-3xl font-black gradient-text">📊 พัฒนาการการฝึก</h1>
+                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50">← กลับหน้าหลัก</Link>
+                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm">📊 พัฒนาการการฝึก</h1>
                     </div>
                     <ThemeToggle />
                 </div>
 
                 {/* Tab switcher */}
-                <div className="flex gap-2 mb-6 flex-wrap">
+                <div className="flex gap-3 mb-8 flex-wrap">
                     {TABS.map(t => (
                         <Link key={t.key}
                             href={`/progress?tab=${t.key}${activeTab === 'chart' && selectedId ? `&ex=${selectedId}` : ''}`}
-                            className={`px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm ${activeTab === t.key
+                            className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 shadow-sm ${activeTab === t.key
                                 ? t.activeColor
-                                : 'glass-card text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                                : 'bg-white/70 dark:bg-zinc-900 border border-white/40 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:shadow-md'
                                 }`}>
                             {t.label}
                         </Link>
@@ -80,12 +80,12 @@ export default async function ProgressPage({
 
                 {/* ── PR Leaderboard ── */}
                 {activeTab === 'prs' && (
-                    <div className="glass-card overflow-hidden animate-fade-in-up">
-                        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 px-6 py-4 flex items-center gap-3">
-                            <span className="text-2xl">🏆</span>
+                    <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md overflow-hidden animate-fade-in-up">
+                        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-700 px-6 md:px-8 py-5 flex items-center gap-4">
+                            <span className="text-3xl drop-shadow-md">🏆</span>
                             <div>
-                                <h2 className="text-lg font-extrabold text-white">สถิติสูงสุดส่วนตัว</h2>
-                                <p className="text-yellow-100 text-xs">น้ำหนักสูงสุดที่เคยยกในแต่ละท่า</p>
+                                <h2 className="text-xl font-black text-white tracking-tight">สถิติสูงสุดส่วนตัว</h2>
+                                <p className="text-yellow-50 dark:text-yellow-100/80 text-xs font-bold uppercase tracking-wide mt-0.5">น้ำหนักสูงสุดที่เคยยกในแต่ละท่า</p>
                             </div>
                         </div>
 
@@ -103,33 +103,36 @@ export default async function ProgressPage({
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                                            <th className="text-left px-6 py-3">#</th>
-                                            <th className="text-left px-4 py-3">ท่า</th>
-                                            <th className="text-left px-4 py-3">กลุ่มกล้ามเนื้อ</th>
-                                            <th className="text-right px-4 py-3">🏆 PR</th>
-                                            <th className="text-right px-6 py-3">วันที่ทำได้</th>
+                                        <tr className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide border-b border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-950/50">
+                                            <th className="text-left px-6 py-4">#</th>
+                                            <th className="text-left px-4 py-4">ท่า</th>
+                                            <th className="text-left px-4 py-4">กลุ่มกล้ามเนื้อ</th>
+                                            <th className="text-right px-4 py-4">🏆 PR</th>
+                                            <th className="text-right px-6 py-4">วันที่ทำได้</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50">
+                                    <tbody className="divide-y divide-gray-50 dark:divide-zinc-800">
                                         {allPRs.map((pr, i) => (
-                                            <tr key={pr.exerciseId} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
-                                                <td className="px-6 py-3 text-gray-400 dark:text-gray-500 font-mono">{i + 1}</td>
-                                                <td className="px-4 py-3">
-                                                    <Link href={`/exercises/${pr.exerciseId}`} className="font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition">
+                                            <tr key={pr.exerciseId} className="hover:bg-gray-50/80 dark:hover:bg-zinc-900/50 transition-colors">
+                                                <td className="px-6 py-4 text-gray-400 dark:text-zinc-500 font-mono font-bold">{i + 1}</td>
+                                                <td className="px-4 py-4">
+                                                    <Link href={`/exercises/${pr.exerciseId}`} className="font-extrabold text-gray-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-red-400 transition-colors tracking-tight">
                                                         {pr.name}
                                                     </Link>
                                                 </td>
-                                                <td className="px-4 py-3">
-                                                    <span className="text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">
+                                                <td className="px-4 py-4">
+                                                    <span className="text-xs bg-blue-50 dark:bg-red-950/40 text-blue-700 dark:text-red-400 px-3 py-1 rounded-lg font-bold border border-blue-100 dark:border-red-900/30">
                                                         {pr.muscle_group}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-right">
-                                                    <span className="text-xl font-extrabold text-yellow-600 dark:text-yellow-400">{pr.weight}</span>
-                                                    <span className="text-xs text-gray-400 ml-1">kg</span>
+                                                <td className="px-4 py-4 text-right">
+                                                    <span className="text-xl font-black text-yellow-600 dark:text-yellow-500">{pr.calculated_1rm}</span>
+                                                    <span className="text-xs font-bold text-gray-400 dark:text-zinc-500 ml-1 uppercase">kg</span>
+                                                    <div className="text-[10px] text-gray-500 dark:text-zinc-500 mt-1">
+                                                        ({pr.raw_weight}kg x {pr.reps})
+                                                    </div>
                                                 </td>
-                                                <td className="px-6 py-3 text-right text-gray-500 dark:text-gray-400 text-xs">
+                                                <td className="px-6 py-4 text-right text-gray-500 dark:text-zinc-400 text-xs font-bold">
                                                     {new Date(pr.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })}
                                                 </td>
                                             </tr>
@@ -154,17 +157,17 @@ export default async function ProgressPage({
                             />
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fade-in-up">
-                            <div className="lg:col-span-1">
-                                <div className="glass-card overflow-hidden">
-                                    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700/50">
-                                        <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">ท่าออกกำลังกาย</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in-up">
+                            <div className="md:col-span-1">
+                                <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md overflow-hidden">
+                                    <div className="px-5 py-4 border-b border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-950/50">
+                                        <h2 className="text-xs font-black text-gray-500 dark:text-zinc-400 uppercase tracking-widest">ท่าออกกำลังกาย</h2>
                                     </div>
-                                    <ul className="divide-y divide-gray-50 dark:divide-gray-700/50 max-h-96 overflow-y-auto">
+                                    <ul className="divide-y divide-gray-50 dark:divide-zinc-800/50 max-h-96 md:max-h-[600px] overflow-y-auto custom-scrollbar">
                                         {exercises.map(ex => (
                                             <li key={ex.id}>
                                                 <Link href={`/progress?ex=${ex.id}&tab=chart`}
-                                                    className={`flex items-center gap-3 px-4 py-3 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-800/50 ${ex.id === activeId ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold border-l-2 border-blue-600' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                    className={`flex items-center gap-3 px-5 py-4 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800/50 ${ex.id === activeId ? 'bg-blue-50 dark:bg-red-950/20 text-blue-700 dark:text-red-400 font-bold border-l-4 border-blue-600 dark:border-red-500' : 'text-gray-700 dark:text-zinc-300 font-medium border-l-4 border-transparent'}`}>
                                                     <span className="truncate">{ex.name}</span>
                                                 </Link>
                                             </li>
@@ -173,22 +176,23 @@ export default async function ProgressPage({
                                 </div>
                             </div>
 
-                            <div className="lg:col-span-3">
+                            <div className="md:col-span-3">
                                 {activeExercise ? (
-                                    <div className="glass-card p-6">
-                                        <div className="flex items-center justify-between mb-6">
-                                            <div>
-                                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{activeExercise.name}</h2>
-                                                <span className="text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">
+                                    <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-6 md:p-8 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-gray-100 dark:border-zinc-800">
+                                            <div className="flex items-center gap-4">
+                                                <h2 className="text-2xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">{activeExercise.name}</h2>
+                                                <span className="text-xs bg-blue-50 dark:bg-red-950/40 text-blue-700 dark:text-red-400 px-3 py-1 rounded-lg font-bold border border-blue-100 dark:border-red-900/30">
                                                     {activeExercise.muscle_group}
                                                 </span>
                                             </div>
-                                            <Link href={`/exercises/${activeExercise.id}`} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">ดูรายละเอียด →</Link>
+                                            <Link href={`/exercises/${activeExercise.id}`} className="text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 hover:underline transition-colors whitespace-nowrap">ดูรายละเอียด →</Link>
                                         </div>
                                         <ProgressChart data={progressData} exerciseName={activeExercise.name} />
                                     </div>
                                 ) : (
-                                    <div className="glass-card p-12 text-center text-gray-500 dark:text-gray-400">
+                                    <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-12 text-center text-gray-500 dark:text-zinc-500 border border-white/40 dark:border-zinc-800 font-bold shadow-sm backdrop-blur-md flex flex-col items-center justify-center min-h-[400px]">
+                                        <span className="text-4xl mb-4 opacity-50">👈</span>
                                         เลือกท่าออกกำลังกายทางซ้ายเพื่อดูกราฟ
                                     </div>
                                 )}

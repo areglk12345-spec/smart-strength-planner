@@ -32,7 +32,7 @@ export function RemoveFromRoutineButton({
         <button
             onClick={handleRemove}
             disabled={loading}
-            className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded bg-red-50 hover:bg-red-100 transition disabled:opacity-50"
+            className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-bold px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-transparent dark:border-red-900/30 transition-colors disabled:opacity-50 shadow-sm"
         >
             {loading ? 'กำลังนำออก...' : 'นำออก'}
         </button>

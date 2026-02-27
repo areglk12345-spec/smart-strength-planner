@@ -32,10 +32,10 @@ export function ToastProvider() {
             {toasts.map(toast => (
                 <div
                     key={toast.id}
-                    className={`animate-fade-in-up flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border text-sm font-semibold pointer-events-auto w-[90%] sm:w-80 backdrop-blur-md ${toast.type === 'success' ? 'bg-emerald-50/90 dark:bg-emerald-900/80 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-100' :
-                        toast.type === 'error' ? 'bg-red-50/90 dark:bg-red-900/80 border-red-200 dark:border-red-800 text-red-800 dark:text-red-100' :
-                            toast.type === 'warning' ? 'bg-yellow-50/90 dark:bg-yellow-900/80 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-100' :
-                                'bg-white/90 dark:bg-gray-800/90 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100'
+                    className={`animate-fade-in-up flex items-center gap-3 px-4 py-3 rounded-2xl shadow-lg border text-sm font-semibold pointer-events-auto w-[90%] sm:w-80 backdrop-blur-md ${toast.type === 'success' ? 'bg-emerald-50/90 dark:bg-emerald-950/80 border-emerald-200 dark:border-emerald-900/50 text-emerald-800 dark:text-emerald-400' :
+                        toast.type === 'error' ? 'bg-red-50/90 dark:bg-red-950/80 border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-400' :
+                            toast.type === 'warning' ? 'bg-yellow-50/90 dark:bg-orange-950/80 border-yellow-200 dark:border-orange-900/50 text-yellow-800 dark:text-orange-400' :
+                                'bg-white/90 dark:bg-zinc-900/90 border-gray-200 dark:border-zinc-800 text-gray-800 dark:text-zinc-100'
                         }`}
                 >
                     <span>

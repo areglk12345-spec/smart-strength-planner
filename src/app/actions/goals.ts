@@ -105,3 +105,49 @@ export async function updateGoal(id: string, formData: FormData) {
     revalidatePath('/goals')
     return { success: true }
 }
+
+// ── Phase 33: Body Composition Goals ──────────────────────────────────────────
+
+export async function getBodyGoal() {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return null
+
+    const { data } = await supabase
+        .from('goals')
+        .select('id, target_body_fat, target_waist')
+        .eq('user_id', user.id)
+        .not('target_body_fat', 'is', null)
+        .limit(1)
+        .maybeSingle()
+
+    return data ?? null
+}
+
+export async function upsertBodyGoal(formData: FormData) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    const target_body_fat = formData.get('target_body_fat') ? Number(formData.get('target_body_fat')) : null
+    const target_waist = formData.get('target_waist') ? Number(formData.get('target_waist')) : null
+    const existingId = formData.get('existing_id')?.toString() || null
+
+    if (existingId) {
+        const { error } = await supabase
+            .from('goals')
+            .update({ target_body_fat, target_waist })
+            .eq('id', existingId)
+            .eq('user_id', user.id)
+        if (error) return { error: 'เกิดข้อผิดพลาด' }
+    } else {
+        // Create a special body-goal row with no exercise_id (use a dummy target_weight = 0)
+        const { error } = await supabase
+            .from('goals')
+            .insert({ user_id: user.id, target_body_fat, target_waist, target_weight: 0 })
+        if (error) return { error: 'เกิดข้อผิดพลาด' }
+    }
+
+    revalidatePath('/goals')
+    return { success: true }
+}

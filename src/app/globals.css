@@ -23,12 +23,24 @@
 }
 
 .dark {
-  --background: #060c1a;
-  --foreground: #e8f0ff;
-  --card-bg: rgba(15, 23, 42, 0.8);
-  --card-border: rgba(255, 255, 255, 0.06);
-  --glass-bg: rgba(15, 23, 42, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --background: #09090b;
+  /* zinc-950 */
+  --foreground: #f4f4f5;
+  /* zinc-100 */
+  --card-bg: rgba(24, 24, 27, 0.85);
+  /* zinc-900 */
+  --card-border: rgba(239, 68, 68, 0.15);
+  /* red-500 tint */
+  --glass-bg: rgba(0, 0, 0, 0.7);
+  /* black backdrop */
+  --glass-border: rgba(220, 38, 38, 0.2);
+  /* red border */
+  --brand-primary: #ef4444;
+  /* red-500 */
+  --brand-secondary: #dc2626;
+  /* red-600 */
+  --brand-accent: #b91c1c;
+  /* red-700 */
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
@@ -135,8 +147,8 @@ body {
 
 .dark .bg-mesh {
   background:
-    radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 20%, rgba(220, 38, 38, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(185, 28, 28, 0.08) 0%, transparent 60%),
     var(--background);
 }
 

@@ -26,7 +26,7 @@ export function DeleteButton({ id }: { id: string }) {
         <button
             onClick={handleDelete}
             disabled={loading}
-            className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:bg-red-50 bg-white px-3 py-1 rounded transition disabled:opacity-50"
+            className="text-xs font-bold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-950/30 bg-white dark:bg-zinc-900 px-3 py-1.5 rounded-lg transition-all shadow-sm disabled:opacity-50"
         >
             {loading ? 'กำลังลบ...' : 'ลบข้อมูล'}
         </button>

@@ -59,47 +59,47 @@ export default async function CalendarPage({
     const totalWorkouts = workoutDates.length
 
     return (
-        <main className="min-h-screen bg-mesh px-4 py-8">
+        <main className="min-h-screen bg-mesh px-4 py-8 text-gray-900 dark:text-zinc-100">
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6 animate-fade-in-up">
+                <div className="flex items-center justify-between mb-8 animate-fade-in-up">
                     <div>
-                        <Link href="/" className="text-sm text-blue-500 hover:underline mb-1 block">← กลับหน้าหลัก</Link>
-                        <h1 className="text-3xl font-black gradient-text">📅 ปฏิทินการฝึก</h1>
+                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50">← กลับหน้าหลัก</Link>
+                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm">📅 ปฏิทินการฝึก</h1>
                     </div>
-                    <div className="glass-card px-4 py-2 text-center">
-                        <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">{totalWorkouts}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">เซสชันเดือนนี้</div>
+                    <div className="bg-white/70 dark:bg-zinc-900 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md px-5 py-2.5 rounded-2xl text-center">
+                        <div className="text-3xl font-black text-blue-600 dark:text-red-500 drop-shadow-sm">{totalWorkouts}</div>
+                        <div className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wide mt-0.5">เซสชันเดือนนี้</div>
                     </div>
                 </div>
 
                 {/* Month nav */}
-                <div className="glass-card p-4 animate-fade-in-up">
-                    <div className="flex items-center justify-between mb-4">
+                <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-5 sm:p-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-zinc-800">
                         <Link href={`/calendar?y=${prevYear}&m=${prevMonth}`}
-                            className="p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 font-bold transition text-lg">
+                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30">
                             ‹
                         </Link>
-                        <h2 className="text-xl font-extrabold text-gray-800 dark:text-gray-200">
+                        <h2 className="text-2xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">
                             {THAI_MONTHS[month - 1]} {year + 543}
                         </h2>
                         <Link href={`/calendar?y=${nextYear}&m=${nextMonth}`}
-                            className="p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-500 font-bold transition text-lg">
+                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30">
                             ›
                         </Link>
                     </div>
 
                     {/* Day labels */}
-                    <div className="grid grid-cols-7 mb-2">
+                    <div className="grid grid-cols-7 mb-3">
                         {DAYS.map(d => (
-                            <div key={d} className="text-center text-xs font-bold text-gray-400 dark:text-gray-500 py-1">
+                            <div key={d} className="text-center text-xs font-black text-gray-400 dark:text-zinc-500 py-2 uppercase tracking-wider">
                                 {d}
                             </div>
                         ))}
                     </div>
 
                     {/* Calendar cells */}
-                    <div className="grid grid-cols-7 gap-1">
+                    <div className="grid grid-cols-7 gap-2">
                         {cells.map((day, idx) => {
                             if (!day) return <div key={`empty-${idx}`} />
 
@@ -110,30 +110,31 @@ export default async function CalendarPage({
                             return (
                                 <div key={dateStr}
                                     className={`
-                                        aspect-square flex flex-col items-center justify-center rounded-xl text-sm font-semibold transition-all
+                                        aspect-square flex flex-col items-center justify-center rounded-2xl text-sm sm:text-base font-black transition-all duration-300 relative
                                         ${isWorkout
-                                            ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-md shadow-blue-500/30 scale-105'
-                                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                            ? 'bg-gradient-to-br from-blue-500 to-purple-600 dark:from-red-600 dark:to-red-800 text-white shadow-md shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.3)] scale-105 border-transparent'
+                                            : 'text-gray-600 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 shadow-sm border border-transparent dark:border-zinc-800/50'
                                         }
-                                        ${isToday && !isWorkout ? 'ring-2 ring-blue-400 dark:ring-blue-500' : ''}
-                                        ${isToday && isWorkout ? 'ring-2 ring-white/50' : ''}
+                                        ${isToday && !isWorkout ? 'ring-2 ring-blue-400 dark:ring-red-500' : ''}
+                                        ${isToday && isWorkout ? 'ring-2 ring-white/50 dark:ring-red-300' : ''}
                                     `}
                                 >
-                                    {day}
-                                    {isWorkout && <div className="w-1 h-1 rounded-full bg-white/70 mt-0.5" />}
+                                    <span className="relative z-10">{day}</span>
+                                    {isWorkout && <div className="absolute bottom-1.5 w-1.5 h-1.5 rounded-full bg-white/80 shadow-sm z-10" />}
+                                    {isWorkout && <div className="absolute inset-0 bg-white/20 dark:bg-black/20 rounded-2xl animate-[shimmer_3s_infinite]" style={{ backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)' }}></div>}
                                 </div>
                             )
                         })}
                     </div>
 
                     {/* Legend */}
-                    <div className="flex items-center gap-4 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center gap-1.5">
-                            <div className="w-4 h-4 rounded-md bg-gradient-to-br from-blue-500 to-purple-600" />
+                    <div className="flex items-center gap-5 mt-6 pt-5 border-t border-gray-100 dark:border-zinc-800 text-xs font-bold text-gray-500 dark:text-zinc-400">
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 dark:from-red-600 dark:to-red-800 shadow-sm" />
                             วันที่ออกกำลังกาย
                         </div>
-                        <div className="flex items-center gap-1.5">
-                            <div className="w-4 h-4 rounded-md ring-2 ring-blue-400" />
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 rounded-lg ring-2 ring-blue-400 dark:ring-red-500 bg-white dark:bg-zinc-900" />
                             วันนี้
                         </div>
                     </div>
@@ -141,13 +142,13 @@ export default async function CalendarPage({
 
                 {/* Workout list this month */}
                 {workoutDates.length > 0 ? (
-                    <div className="glass-card p-4 mt-4 animate-fade-in-up">
-                        <h3 className="font-bold text-gray-700 dark:text-gray-300 mb-3 text-sm">
-                            วันที่ฝึกเดือนนี้
+                    <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-6 mt-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
+                        <h3 className="font-black text-gray-800 dark:text-zinc-100 mb-4 text-base tracking-tight flex items-center gap-2">
+                            <span>📅</span> วันที่ฝึกเดือนนี้
                         </h3>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2.5">
                             {workoutDates.sort().map(d => (
-                                <span key={d} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-semibold">
+                                <span key={d} className="px-4 py-1.5 bg-blue-50 dark:bg-red-950/40 text-blue-700 dark:text-red-400 border border-blue-100 dark:border-red-900/30 rounded-xl text-xs font-bold shadow-sm">
                                     {new Date(d).toLocaleDateString('th-TH', { month: 'short', day: 'numeric' })}
                                 </span>
                             ))}
@@ -165,12 +166,12 @@ export default async function CalendarPage({
                     </div>
                 )}
 
-                <div className="mt-4 flex gap-3">
-                    <Link href="/logs" className="btn-primary w-full text-center py-3 text-sm rounded-xl">
+                <div className="mt-6 flex gap-3">
+                    <Link href="/logs" className="bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold w-full text-center py-4 text-sm rounded-xl transition-all shadow-sm dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] tracking-wide">
                         📝 ดูประวัติการฝึกทั้งหมด
                     </Link>
                 </div>
             </div>
-        </main>
+        </main >
     )
 }

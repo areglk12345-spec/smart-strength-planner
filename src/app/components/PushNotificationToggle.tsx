@@ -105,22 +105,22 @@ export function PushNotificationToggle() {
     }
 
     return (
-        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl mt-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white/50 dark:bg-zinc-900/50 rounded-2xl mt-4 border border-gray-100 dark:border-zinc-800 gap-4">
             <div>
-                <h3 className="font-semibold text-gray-800 dark:text-gray-200">เปิดการแจ้งเตือน (Push)</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">รับแจ้งเตือนเตือนความจำเมื่อถึงเวลาฝึกของแต่ละวัน</p>
+                <h3 className="font-black text-gray-900 dark:text-zinc-100 tracking-tight">เปิดการแจ้งเตือน (Push)</h3>
+                <p className="text-xs font-bold text-gray-500 dark:text-zinc-500 mt-1 uppercase tracking-wide">รับแจ้งเตือนเมื่อถึงเวลาฝึกของแต่ละวัน</p>
             </div>
             <button
                 onClick={handleToggle}
                 disabled={loading}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${isSubscribed ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 ${isSubscribed ? 'bg-blue-600 dark:bg-red-600 shadow-sm dark:shadow-[0_0_10px_rgba(220,38,38,0.4)]' : 'bg-gray-200 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 role="switch"
                 aria-checked={isSubscribed}
             >
                 <span className="sr-only">Toggle notifications</span>
                 <span
                     aria-hidden="true"
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isSubscribed ? 'translate-x-5' : 'translate-x-0'}`}
+                    className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-sm ring-0 transition-transform duration-300 ease-in-out ${isSubscribed ? 'translate-x-[1.25rem]' : 'translate-x-0'}`}
                 />
             </button>
         </div>

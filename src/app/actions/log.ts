@@ -141,18 +141,36 @@ export async function getAllPersonalRecords() {
 
     if (error || !data) return []
 
-    // Keep only the max weight per exercise
-    const prMap: Record<string, { exerciseId: string; name: string; muscle_group: string; weight: number; reps: number; date: string }> = {}
+    // Keep only the max 1RM per exercise
+    // Brzycki Formula: 1RM = Weight × (36 / (37 - Reps))
+    const prMap: Record<string, { exerciseId: string; name: string; muscle_group: string; raw_weight: number; reps: number; calculated_1rm: number; date: string }> = {}
     for (const row of data as any[]) {
         const ex = Array.isArray(row.exercises) ? row.exercises[0] : row.exercises
         const log = Array.isArray(row.workout_logs) ? row.workout_logs[0] : row.workout_logs
         if (!ex || !log) continue
-        if (!prMap[ex.id] || row.weight > prMap[ex.id].weight) {
-            prMap[ex.id] = { exerciseId: ex.id, name: ex.name, muscle_group: ex.muscle_group, weight: row.weight, reps: row.reps, date: log.date }
+
+        const weight = Number(row.weight) || 0
+        const reps = Number(row.reps) || 0
+        // Use formula up to 36 reps to avoid division by zero/negative, otherwise fallback to raw weight
+        let oneRepMax = weight;
+        if (reps > 1 && reps < 37) {
+            oneRepMax = weight * (36 / (37 - reps))
+        }
+
+        if (!prMap[ex.id] || oneRepMax > prMap[ex.id].calculated_1rm) {
+            prMap[ex.id] = {
+                exerciseId: ex.id,
+                name: ex.name,
+                muscle_group: ex.muscle_group,
+                raw_weight: weight,
+                reps: reps,
+                calculated_1rm: Math.round(oneRepMax * 10) / 10, // Round to 1 decimal place
+                date: log.date
+            }
         }
     }
 
-    return Object.values(prMap).sort((a, b) => b.weight - a.weight)
+    return Object.values(prMap).sort((a, b) => b.calculated_1rm - a.calculated_1rm)
 }
 
 // ── Phase 8: Workout Streak ───────────────────────────────────────────────────
@@ -235,6 +253,81 @@ export async function getMuscleSetCounts(days = 30) {
 }
 
 // ── Phase 22: CRUD for Workout Logs ─────────────────────────────────────────
+
+export async function getRecentActivity(limit = 5) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data: logs } = await supabase
+        .from('workout_logs')
+        .select(`
+            id,
+            date,
+            notes,
+            routines ( name ),
+            workout_log_exercises ( sets, reps, weight, exercises ( name, muscle_group ) ),
+            likes:workout_likes ( count ),
+            comments:workout_comments ( id, content, created_at, profiles(name, avatar_url) ),
+            user_likes:workout_likes ( id )
+        `)
+        .eq('user_id', user.id)
+        .order('date', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(limit)
+
+    if (!logs) return []
+
+    return logs.map(log => {
+        let totalVolume = 0;
+        let totalExercises = Array.isArray(log.workout_log_exercises) ? log.workout_log_exercises.length : 0;
+
+        let primaryMuscleGroup = '';
+        const muscleCounts: Record<string, number> = {};
+
+        if (Array.isArray(log.workout_log_exercises)) {
+            for (const ex of log.workout_log_exercises as any[]) {
+                const s = Number(ex.sets) || 1
+                const r = Number(ex.reps) || 0
+                const w = Number(ex.weight) || 0
+                totalVolume += s * r * w
+
+                const mg = ex.exercises?.muscle_group;
+                if (mg) {
+                    muscleCounts[mg] = (muscleCounts[mg] || 0) + 1;
+                }
+            }
+        }
+
+        // Find most trained muscle group for this session
+        let maxCount = 0;
+        for (const [mg, count] of Object.entries(muscleCounts)) {
+            if (count > maxCount) {
+                maxCount = count;
+                primaryMuscleGroup = mg;
+            }
+        }
+
+        const routinesData = log.routines as any;
+        const routineName = Array.isArray(routinesData) ? routinesData[0]?.name : routinesData?.name;
+
+        // Extract social data
+        const likesCount = Array.isArray(log.likes) ? log.likes[0]?.count || 0 : 0
+        const comments = Array.isArray(log.comments) ? log.comments : []
+        const isLiked = Array.isArray(log.user_likes) ? log.user_likes.length > 0 : false
+
+        return {
+            id: log.id,
+            date: log.date,
+            title: routineName || (primaryMuscleGroup ? `${primaryMuscleGroup} Day` : 'Workout'),
+            notes: log.notes,
+            totalVolume,
+            totalExercises,
+            likesCount,
+            comments
+        };
+    });
+}
 
 export async function deleteWorkoutLog(id: string) {
     const supabase = await createClient()

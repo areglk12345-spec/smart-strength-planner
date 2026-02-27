@@ -51,11 +51,11 @@ export default async function NewLogPage({
     }
 
     return (
-        <main className="min-h-screen p-8 bg-gray-50 text-gray-900">
-            <div className="max-w-4xl mx-auto">
+        <main className="min-h-screen p-8 bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+            <div className="max-w-4xl mx-auto animate-fade-in-up">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-blue-600 mb-2">บันทึกสถิติการออกกำลังกาย ✍️</h1>
-                    <p className="text-gray-600">จดบันทึกเซ็ตและน้ำหนักที่คุณยกในวันนี้ เพื่อดูการพัฒนาของตัวเอง</p>
+                    <h1 className="text-3xl font-black text-blue-600 dark:text-red-500 mb-2 tracking-tight">บันทึกสถิติการออกกำลังกาย ✍️</h1>
+                    <p className="text-gray-600 dark:text-zinc-400 font-medium">จดบันทึกเซ็ตและน้ำหนักที่คุณยกในวันนี้ เพื่อดูการพัฒนาของตัวเอง</p>
                 </div>
 
                 <WorkoutLogForm

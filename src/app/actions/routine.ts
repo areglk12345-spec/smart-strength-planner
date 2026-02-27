@@ -169,3 +169,35 @@ export async function getPublicRoutines() {
 
     return routines
 }
+
+export async function updateRoutineExercisesOrder(
+    routineId: string,
+    updates: { exercise_id: string; order_index: number; superset_id: string | null }[]
+) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: 'กรุณาเข้าสู่ระบบ' }
+
+    // Use a transaction-like approach or Promise.all for updates
+    const updatePromises = updates.map(update =>
+        supabase
+            .from('routine_exercises')
+            .update({
+                order_index: update.order_index,
+                superset_id: update.superset_id
+            })
+            .eq('routine_id', routineId)
+            .eq('exercise_id', update.exercise_id)
+    )
+
+    const results = await Promise.all(updatePromises)
+    const hasError = results.some(r => r.error)
+
+    if (hasError) {
+        console.error('Error updating exercise order')
+        return { error: 'เกิดข้อผิดพลาดในการอัปเดตลำดับท่า' }
+    }
+
+    revalidatePath(`/routines/${routineId}`)
+    return { success: true }
+}

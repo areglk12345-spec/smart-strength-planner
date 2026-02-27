@@ -114,16 +114,16 @@ export default async function ProfilePage() {
     const displayName = profile?.name ?? null
 
     return (
-        <main className="min-h-screen p-8 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-            <div className="max-w-4xl mx-auto">
+        <main className="min-h-screen p-8 bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+            <div className="max-w-4xl mx-auto animate-fade-in-up">
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">โปรไฟล์ของฉัน 👤</h1>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user.email}</p>
+                        <h1 className="text-3xl font-black text-blue-600 dark:text-red-500 tracking-tight">โปรไฟล์ของฉัน 👤</h1>
+                        <p className="text-gray-500 dark:text-zinc-400 font-medium text-sm mt-1">{user.email}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
-                        <Link href="/" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 bg-white dark:bg-gray-800 px-4 py-2 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
+                        <Link href="/" className="text-sm font-bold text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 bg-white dark:bg-zinc-900 px-4 py-2.5 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 transition-colors">
                             ← กลับหน้าหลัก
                         </Link>
                     </div>
@@ -132,36 +132,36 @@ export default async function ProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left: Profile Card */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full">
+                        <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md h-full">
                             {/* Avatar */}
-                            <div className="flex flex-col items-center mb-6 pb-6 border-b border-gray-100">
+                            <div className="flex flex-col items-center mb-6 pb-6 border-b border-gray-100 dark:border-zinc-800">
                                 {profile?.avatar_url ? (
                                     profile.avatar_url.startsWith('http') ? (
-                                        <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-full object-cover shadow-lg mb-3 border-2 border-white" />
+                                        <img src={profile.avatar_url} alt="Avatar" className="w-24 h-24 rounded-full object-cover shadow-lg mb-4 border-4 border-white dark:border-zinc-800 dark:shadow-[0_0_20px_rgba(220,38,38,0.2)]" />
                                     ) : (
-                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center text-4xl shadow-lg mb-3 border-2 border-white dark:border-gray-600">
+                                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center text-4xl shadow-lg mb-4 border-4 border-white dark:border-zinc-800 dark:shadow-[0_0_20px_rgba(220,38,38,0.2)] text-gray-700 dark:text-zinc-300">
                                             {profile.avatar_url}
                                         </div>
                                     )
                                 ) : (
-                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-3">
+                                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 dark:from-red-600 dark:to-rose-800 flex items-center justify-center text-white text-4xl font-black shadow-lg mb-4 border-4 border-white dark:border-zinc-800 dark:shadow-[0_0_20px_rgba(220,38,38,0.3)]">
                                         {displayName ? displayName[0].toUpperCase() : user.email?.[0].toUpperCase()}
                                     </div>
                                 )}
-                                <h2 className="text-lg font-bold text-gray-900">{displayName || 'Unnamed Athlete'}</h2>
+                                <h2 className="text-xl font-black text-gray-900 dark:text-zinc-100">{displayName || 'Unnamed Athlete'}</h2>
                                 {latestWeight && (
-                                    <div className="mt-2 bg-blue-50 border border-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                    <div className="mt-3 bg-blue-50 dark:bg-red-950/30 border border-blue-100 dark:border-red-900/50 text-blue-700 dark:text-red-400 px-4 py-1.5 rounded-xl text-sm font-bold tracking-wide">
                                         ⚖️ น้ำหนักล่าสุด: {latestWeight} kg
                                     </div>
                                 )}
                                 {profile?.goal && (
-                                    <div className="mt-3 text-center text-sm text-gray-500 italic">
+                                    <div className="mt-4 text-center text-sm font-medium text-gray-500 dark:text-zinc-400 italic bg-gray-50 dark:bg-zinc-950/50 p-3 rounded-xl border border-gray-100 dark:border-zinc-800 w-full">
                                         🎯 "{profile.goal}"
                                     </div>
                                 )}
                             </div>
 
-                            <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-4">แก้ไขโปรไฟล์</h3>
+                            <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-100 mb-5">แก้ไขโปรไฟล์</h3>
                             <ProfileForm
                                 displayName={displayName}
                                 goal={profile?.goal ?? null}
@@ -170,8 +170,8 @@ export default async function ProfilePage() {
                                 avatarUrl={profile?.avatar_url ?? null}
                             />
 
-                            <div className="mt-8 border-t border-gray-100 dark:border-gray-700 pt-6">
-                                <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2">ตั้งค่าแอปพลิเคชัน</h3>
+                            <div className="mt-8 border-t border-gray-100 dark:border-zinc-800 pt-6">
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-zinc-100 mb-4">ตั้งค่าแอปพลิเคชัน</h3>
                                 <PushNotificationToggle />
                             </div>
                         </div>
@@ -180,19 +180,19 @@ export default async function ProfilePage() {
                     {/* Right: Weight Tracking */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Weight Chart */}
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+                        <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
                                 <span>📈</span> กราฟน้ำหนักตัว
                                 {logs.length > 0 && (
-                                    <span className="text-xs font-normal text-gray-400 ml-auto">{logs.length} รายการล่าสุด</span>
+                                    <span className="text-sm font-semibold text-gray-400 dark:text-zinc-500 ml-auto bg-gray-50 dark:bg-zinc-950/50 px-3 py-1 rounded-lg border border-gray-200 dark:border-zinc-800">{logs.length} รายการล่าสุด</span>
                                 )}
                             </h3>
                             <WeightChart logs={logs} />
                         </div>
 
                         {/* Add Weight Form */}
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+                        <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
                                 <span>⚖️</span> บันทึกน้ำหนักวันนี้
                             </h3>
                             <WeightLogForm />
@@ -200,17 +200,17 @@ export default async function ProfilePage() {
 
                         {/* Weight History Table */}
                         {logs.length > 0 && (
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-                                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+                            <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
                                     <span>📋</span> ประวัติน้ำหนัก
                                 </h3>
-                                <div className="overflow-x-auto">
+                                <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-zinc-800">
                                     <table className="w-full text-sm text-left">
-                                        <thead>
-                                            <tr className="text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-100 dark:border-gray-700">
-                                                <th className="pb-3 pr-4">วันที่</th>
-                                                <th className="pb-3 text-right">น้ำหนัก (kg)</th>
-                                                <th className="pb-3 text-right pl-4">เปลี่ยนแปลง</th>
+                                        <thead className="bg-gray-50 dark:bg-zinc-950">
+                                            <tr className="text-xs font-bold text-gray-600 dark:text-zinc-400 uppercase border-b border-gray-200 dark:border-zinc-800">
+                                                <th className="py-4 px-5">วันที่</th>
+                                                <th className="py-4 px-5 text-right">น้ำหนัก (kg)</th>
+                                                <th className="py-4 px-5 text-right">เปลี่ยนแปลง</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -219,18 +219,18 @@ export default async function ProfilePage() {
                                                 const diff = prev ? log.weight - prev.weight : null
                                                 const dateObj = new Date(log.date)
                                                 return (
-                                                    <tr key={log.id} className="border-b border-gray-50 dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                                        <td className="py-3 pr-4 text-gray-700 dark:text-gray-300">
+                                                    <tr key={log.id} className="border-b border-gray-100 dark:border-zinc-800 last:border-0 hover:bg-gray-50 dark:hover:bg-zinc-800/80 transition-colors bg-white dark:bg-zinc-900">
+                                                        <td className="py-4 px-5 text-gray-700 dark:text-zinc-300 font-medium">
                                                             {dateObj.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' })}
                                                         </td>
-                                                        <td className="py-3 text-right font-bold text-gray-900">{log.weight}</td>
-                                                        <td className="py-3 text-right pl-4">
+                                                        <td className="py-4 px-5 text-right font-black text-gray-900 dark:text-zinc-100">{log.weight}</td>
+                                                        <td className="py-4 px-5 text-right">
                                                             {diff !== null ? (
-                                                                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${diff < 0 ? 'text-green-700 bg-green-50' : diff > 0 ? 'text-red-700 bg-red-50' : 'text-gray-500 bg-gray-100'}`}>
+                                                                <span className={`text-xs font-bold px-3 py-1 rounded-lg ${diff < 0 ? 'text-green-700 bg-green-50 dark:text-green-400 dark:bg-green-950/40 border border-green-200 dark:border-green-900/50' : diff > 0 ? 'text-red-700 bg-red-50 dark:text-red-400 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50' : 'text-gray-600 bg-gray-100 dark:text-zinc-400 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700'}`}>
                                                                     {diff > 0 ? '+' : ''}{diff.toFixed(1)} kg
                                                                 </span>
                                                             ) : (
-                                                                <span className="text-gray-300 text-xs">—</span>
+                                                                <span className="text-gray-300 dark:text-zinc-600 text-xs font-bold">—</span>
                                                             )}
                                                         </td>
                                                     </tr>

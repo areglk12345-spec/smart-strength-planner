@@ -83,10 +83,10 @@ export function MuscleHeatmap({ muscleSetCounts }: Props) {
     const sorted = Object.entries(muscleSetCounts).sort((a, b) => b[1] - a[1])
 
     return (
-        <div className="glass-card p-5">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="font-extrabold text-gray-800 dark:text-gray-200">📊 Muscle Heatmap</h3>
-                <span className="text-xs text-gray-400 dark:text-gray-500">30 วันล่าสุด</span>
+        <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-5 sm:p-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
+            <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 pb-4">
+                <h3 className="font-black text-gray-900 dark:text-zinc-100 tracking-tight text-lg">📊 Muscle Heatmap</h3>
+                <span className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-zinc-500 bg-gray-100 dark:bg-zinc-800 px-2.5 py-1 rounded-lg">30 วันล่าสุด</span>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-6 items-center">
@@ -122,7 +122,7 @@ export function MuscleHeatmap({ muscleSetCounts }: Props) {
                 {/* Legend / Stats */}
                 <div className="flex-1 w-full">
                     {sorted.length === 0 ? (
-                        <p className="text-sm text-gray-400 dark:text-gray-500 text-center">
+                        <p className="text-sm font-medium text-gray-400 dark:text-zinc-500 text-center bg-gray-50 dark:bg-zinc-950/50 p-4 rounded-2xl border border-gray-100 dark:border-zinc-800">
                             ยังไม่มีข้อมูล — บันทึกการฝึกก่อนครับ
                         </p>
                     ) : (
@@ -130,18 +130,18 @@ export function MuscleHeatmap({ muscleSetCounts }: Props) {
                             {sorted.map(([muscle, sets]) => {
                                 const pct = maxSets > 0 ? Math.round((sets / maxSets) * 100) : 0
                                 return (
-                                    <div key={muscle} className="flex items-center gap-2">
-                                        <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 w-20 shrink-0">{muscle}</span>
-                                        <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div key={muscle} className="flex items-center gap-3">
+                                        <span className="text-xs font-bold text-gray-700 dark:text-zinc-300 w-16 shrink-0 uppercase tracking-wide">{muscle}</span>
+                                        <div className="flex-1 h-2.5 bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden shadow-inner">
                                             <div
-                                                className="h-full rounded-full transition-all duration-500"
+                                                className="h-full rounded-full transition-all duration-500 shadow-sm"
                                                 style={{
                                                     width: `${pct}%`,
-                                                    background: pct > 66 ? '#ef4444' : pct > 33 ? '#f97316' : '#3b82f6'
+                                                    background: pct > 66 ? 'linear-gradient(to right, #ef4444, #b91c1c)' : pct > 33 ? 'linear-gradient(to right, #f97316, #c2410c)' : 'linear-gradient(to right, #3b82f6, #1d4ed8)'
                                                 }}
                                             />
                                         </div>
-                                        <span className="text-xs font-bold text-gray-500 dark:text-gray-400 w-12 text-right">{sets} sets</span>
+                                        <span className="text-xs font-black text-gray-600 dark:text-zinc-400 w-14 text-right">{sets} sets</span>
                                     </div>
                                 )
                             })}
@@ -149,10 +149,10 @@ export function MuscleHeatmap({ muscleSetCounts }: Props) {
                     )}
 
                     {/* Color legend */}
-                    <div className="flex items-center gap-3 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500">
-                        <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-sm bg-blue-500/50" /> น้อย</div>
-                        <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-sm bg-orange-500/70" /> ปานกลาง</div>
-                        <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-sm bg-red-500/80" /> มาก</div>
+                    <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100 dark:border-zinc-800 text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider">
+                        <div className="flex items-center gap-1.5"><div className="w-3.5 h-3.5 rounded-md bg-gradient-to-br from-blue-400 to-blue-600 shadow-sm" /> น้อย</div>
+                        <div className="flex items-center gap-1.5"><div className="w-3.5 h-3.5 rounded-md bg-gradient-to-br from-orange-400 to-orange-600 shadow-sm" /> กลาง</div>
+                        <div className="flex items-center gap-1.5"><div className="w-3.5 h-3.5 rounded-md bg-gradient-to-br from-red-500 to-red-700 shadow-sm" /> มาก</div>
                     </div>
                 </div>
             </div>

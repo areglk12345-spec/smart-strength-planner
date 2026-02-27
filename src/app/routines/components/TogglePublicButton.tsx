@@ -11,8 +11,8 @@ export function TogglePublicButton({ routineId, isPublic }: { routineId: string;
     const { toast } = useToast()
 
     const publicUrl = typeof window !== 'undefined'
-        ? `${window.location.origin}/routines/${routineId}/public`
-        : `/routines/${routineId}/public`
+        ? `${window.location.origin}/routines/${routineId}`
+        : `/routines/${routineId}`
 
     async function handleToggle() {
         setLoading(true)
@@ -37,9 +37,9 @@ export function TogglePublicButton({ routineId, isPublic }: { routineId: string;
             <button
                 onClick={handleToggle}
                 disabled={loading}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm disabled:opacity-50 ${currentPublic
-                    ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/60'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
+                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm disabled:opacity-50 justify-center w-full sm:w-auto ${currentPublic
+                    ? 'bg-green-100 dark:bg-emerald-950/40 text-green-700 dark:text-emerald-400 border border-green-300 dark:border-emerald-900/50 hover:bg-green-200 dark:hover:bg-emerald-900/60'
+                    : 'bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 border border-gray-300 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700'
                     }`}
             >
                 <span>{loading ? '⏳' : currentPublic ? '🌐' : '🔒'}</span>
@@ -47,13 +47,13 @@ export function TogglePublicButton({ routineId, isPublic }: { routineId: string;
             </button>
 
             {currentPublic && (
-                <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <span className="text-xs text-blue-700 dark:text-blue-300 font-mono truncate flex-1 select-all">
+                <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-zinc-950/50 border border-blue-200 dark:border-zinc-800 rounded-xl">
+                    <span className="text-xs text-blue-700 dark:text-zinc-400 font-mono truncate flex-1 select-all font-medium">
                         {publicUrl}
                     </span>
                     <button
                         onClick={handleCopy}
-                        className="shrink-0 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md transition font-medium"
+                        className="shrink-0 text-xs bg-blue-600 hover:bg-blue-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 dark:border dark:border-zinc-700 text-white px-4 py-2 rounded-lg transition-colors font-bold shadow-sm"
                     >
                         {copied ? '✅ Copied!' : '📋 Copy'}
                     </button>

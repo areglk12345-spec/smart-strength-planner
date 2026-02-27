@@ -34,7 +34,7 @@ export function DeleteRoutineButton({ id }: { id: string }) {
                     setIsConfirmOpen(true)
                 }}
                 disabled={loading}
-                className="text-xs text-red-500 hover:text-red-700 bg-red-50/50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-lg transition disabled:opacity-50 z-10 relative font-semibold"
+                className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-transparent dark:border-red-900/30 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 z-10 relative font-bold"
             >
                 {loading ? '⏳ กำลังลบ...' : '🗑 ลบ'}
             </button>

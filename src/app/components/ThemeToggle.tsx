@@ -25,9 +25,9 @@ export function ThemeToggle() {
         <button
             onClick={toggle}
             aria-label="Toggle dark mode"
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-all duration-200 text-sm"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-200 transition-all duration-300 text-base shadow-sm border border-gray-200 dark:border-zinc-700 dark:shadow-[0_2px_8px_rgba(0,0,0,0.5)] group"
         >
-            {dark ? '☀️' : '🌙'}
+            <span className="group-hover:scale-110 transition-transform duration-300">{dark ? '☀️' : '🌙'}</span>
         </button>
     )
 }
