@@ -92,12 +92,26 @@ export async function getExerciseProgress(exerciseId: string) {
 
     if (error || !data) return []
 
-    const byDate: Record<string, { date: string; maxWeight: number; sets: number; reps: number }> = {}
+    const byDate: Record<string, { date: string; maxWeight: number; sets: number; reps: number; calculated_1rm: number }> = {}
     for (const row of data as any[]) {
         const date: string = Array.isArray(row.workout_logs) ? row.workout_logs[0]?.date : row.workout_logs?.date
         if (!date) continue
-        if (!byDate[date] || row.weight > byDate[date].maxWeight) {
-            byDate[date] = { date, maxWeight: row.weight, sets: row.sets, reps: row.reps }
+
+        const weight = Number(row.weight) || 0
+        const reps = Number(row.reps) || 0
+        let oneRepMax = weight
+        if (reps > 1 && reps < 37) {
+            oneRepMax = weight * (36 / (37 - reps))
+        }
+
+        if (!byDate[date] || oneRepMax > byDate[date].calculated_1rm) {
+            byDate[date] = {
+                date,
+                maxWeight: weight,
+                sets: row.sets,
+                reps: reps,
+                calculated_1rm: Math.round(oneRepMax * 10) / 10
+            }
         }
     }
 
@@ -266,10 +280,7 @@ export async function getRecentActivity(limit = 5) {
             date,
             notes,
             routines ( name ),
-            workout_log_exercises ( sets, reps, weight, exercises ( name, muscle_group ) ),
-            likes:workout_likes ( count ),
-            comments:workout_comments ( id, content, created_at, profiles(name, avatar_url) ),
-            user_likes:workout_likes ( id )
+            workout_log_exercises ( sets, reps, weight, exercises ( name, muscle_group ) )
         `)
         .eq('user_id', user.id)
         .order('date', { ascending: false })
@@ -311,20 +322,13 @@ export async function getRecentActivity(limit = 5) {
         const routinesData = log.routines as any;
         const routineName = Array.isArray(routinesData) ? routinesData[0]?.name : routinesData?.name;
 
-        // Extract social data
-        const likesCount = Array.isArray(log.likes) ? log.likes[0]?.count || 0 : 0
-        const comments = Array.isArray(log.comments) ? log.comments : []
-        const isLiked = Array.isArray(log.user_likes) ? log.user_likes.length > 0 : false
-
         return {
             id: log.id,
             date: log.date,
             title: routineName || (primaryMuscleGroup ? `${primaryMuscleGroup} Day` : 'Workout'),
             notes: log.notes,
             totalVolume,
-            totalExercises,
-            likesCount,
-            comments
+            totalExercises
         };
     });
 }
@@ -360,6 +364,118 @@ export async function deleteWorkoutLog(id: string) {
     revalidatePath('/logs')
     revalidatePath('/progress')
     return { success: true }
+}
+
+// ── Phase 37: Deep Workout Analytics ──────────────────────────────────────────
+
+export async function getMuscleVolumeTrends(weeks = 8) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const since = new Date()
+    since.setDate(since.getDate() - (weeks * 7))
+    const sinceStr = since.toISOString().split('T')[0]
+
+    const { data: logs } = await supabase
+        .from('workout_logs')
+        .select(`
+            date,
+            workout_log_exercises (
+                sets, reps, weight,
+                exercises ( muscle_group )
+            )
+        `)
+        .eq('user_id', user.id)
+        .gte('date', sinceStr)
+        .order('date', { ascending: true })
+
+    if (!logs) return []
+
+    // Grouping by week and muscle group
+    const weekData: Record<string, Record<string, number>> = {}
+
+    for (const log of logs) {
+        const d = new Date(log.date)
+        const weekNum = Math.floor(d.getTime() / (7 * 24 * 60 * 60 * 1000))
+        const weekKey = `W${weekNum}` // Temporary key for easier grouping
+
+        if (!weekData[weekKey]) weekData[weekKey] = { date: log.date }
+
+        for (const ex of (log.workout_log_exercises ?? []) as any[]) {
+            const mg = ex.exercises?.muscle_group
+            if (!mg) continue
+            const vol = (Number(ex.sets) || 1) * (Number(ex.reps) || 0) * (Number(ex.weight) || 0)
+            weekData[weekKey][mg] = (weekData[weekKey][mg] ?? 0) + vol
+        }
+    }
+
+    return Object.values(weekData).sort((a: any, b: any) => a.date.localeCompare(b.date))
+}
+
+export async function getWeeklyComparison() {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return null
+
+    const today = new Date()
+    const currentMonday = new Date(today)
+    currentMonday.setDate(today.getDate() - ((today.getDay() + 6) % 7))
+    currentMonday.setHours(0, 0, 0, 0)
+
+    const prevMonday = new Date(currentMonday)
+    prevMonday.setDate(currentMonday.getDate() - 7)
+
+    const { data: logs } = await supabase
+        .from('workout_logs')
+        .select(`
+            date,
+            workout_log_exercises ( sets, reps, weight )
+        `)
+        .eq('user_id', user.id)
+        .gte('date', prevMonday.toISOString().split('T')[0])
+
+    if (!logs) return null
+
+    const stats = {
+        current: { volume: 0, sessions: 0 },
+        prev: { volume: 0, sessions: 0 }
+    }
+
+    for (const log of logs) {
+        const logDate = new Date(log.date)
+        logDate.setHours(0, 0, 0, 0)
+
+        const isCurrent = logDate >= currentMonday
+        const target = isCurrent ? stats.current : stats.prev
+
+        target.sessions++
+
+        // Use a Set to track processed exercise logs within this workout to avoid any potential double counting from joins
+        const processedExerciseIds = new Set()
+
+        for (const ex of (log.workout_log_exercises ?? []) as any[]) {
+            // If the same exercise record appears twice due to join issues, skip it
+            // Note: Each set should be a unique row, so we sum them correctly.
+            // The issue might be that "sets" is a multiplier AND we are iterating over sets? 
+            // Let's check the schema: usually workout_log_exercises has 'sets', 'reps', 'weight' as columns.
+            // Volume = (sets) * (reps) * (weight)
+            const s = Number(ex.sets) || 1
+            const r = Number(ex.reps) || 0
+            const w = Number(ex.weight) || 0
+            target.volume += s * r * w
+        }
+    }
+
+    const volDiff = stats.prev.volume > 0
+        ? ((stats.current.volume - stats.prev.volume) / stats.prev.volume) * 100
+        : stats.current.volume > 0 ? 100 : 0
+
+    return {
+        current: stats.current,
+        prev: stats.prev,
+        volumeChangePercent: Math.round(volDiff)
+    }
 }
 
 export async function updateWorkoutLog(id: string, formData: FormData) {

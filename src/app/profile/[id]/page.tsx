@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ThemeToggle } from '@/app/components/ThemeToggle'
-import { FollowButton } from '@/app/community/components/FollowButton'
+import { ChevronLeft, User, Inbox } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -64,8 +64,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
                 {/* Header Navigation */}
                 <div className="flex justify-between items-center mb-8 relative z-10 glass-card p-4 rounded-3xl">
-                    <Link href="/community" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors bg-white dark:bg-zinc-900 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
-                        <span className="mr-2">←</span> กลับหน้ารวม Community
+                    <Link href="/" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors bg-white dark:bg-zinc-900 px-4 py-2 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
+                        <ChevronLeft size={16} className="mr-2" /> กลับหน้าหลัก
                     </Link>
                     <ThemeToggle />
                 </div>
@@ -86,7 +86,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                                         priority
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-5xl">👶</div>
+                                    <div className="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-zinc-800/50">
+                                        <User size={48} className="text-gray-300 dark:text-zinc-700" />
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -105,28 +107,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                             {/* Stats Flex */}
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-sm font-bold pt-2">
                                 <div className="bg-gray-50 dark:bg-zinc-950/50 px-4 py-2 rounded-xl border border-gray-100 dark:border-zinc-800 flex flex-col items-center">
-                                    <span className="text-xl text-blue-600 dark:text-red-400">{followersCount}</span>
-                                    <span className="text-gray-500 dark:text-zinc-500 text-xs uppercase tracking-widest mt-0.5">Followers</span>
-                                </div>
-                                <div className="bg-gray-50 dark:bg-zinc-950/50 px-4 py-2 rounded-xl border border-gray-100 dark:border-zinc-800 flex flex-col items-center">
-                                    <span className="text-xl text-gray-900 dark:text-zinc-200">{followingCount}</span>
-                                    <span className="text-gray-500 dark:text-zinc-500 text-xs uppercase tracking-widest mt-0.5">Following</span>
-                                </div>
-                                <div className="bg-gray-50 dark:bg-zinc-950/50 px-4 py-2 rounded-xl border border-gray-100 dark:border-zinc-800 flex flex-col items-center">
                                     <span className="text-xl text-gray-900 dark:text-zinc-200">{routineCount}</span>
                                     <span className="text-gray-500 dark:text-zinc-500 text-xs uppercase tracking-widest mt-0.5">Routines</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Action Buttons */}
-                        <div className="shrink-0 mt-2 md:mt-0 self-center md:self-start pt-2">
-                            <FollowButton
-                                userId={id}
-                                initialIsFollowing={isFollowing}
-                                isLoggedIn={!!user}
-                            />
-                        </div>
+
                     </div>
                 </div>
 
@@ -163,7 +150,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     </div>
                 ) : (
                     <div className="bg-white/70 dark:bg-zinc-900 p-12 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md text-center">
-                        <div className="text-5xl opacity-50 mb-4">📭</div>
+                        <div className="flex justify-center mb-4">
+                            <Inbox size={48} className="text-gray-300 dark:text-zinc-700" />
+                        </div>
                         <p className="text-lg font-bold text-gray-700 dark:text-zinc-300">
                             {profile.name} ยังไม่มีตารางฝึกที่เปิดเป็นสาธารณะ
                         </p>

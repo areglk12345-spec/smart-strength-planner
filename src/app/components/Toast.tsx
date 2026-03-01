@@ -1,6 +1,7 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react'
+import { CheckCircle2, XCircle, AlertTriangle, Info } from 'lucide-react'
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning'
 
@@ -39,7 +40,10 @@ export function ToastProvider() {
                         }`}
                 >
                     <span>
-                        {toast.type === 'success' ? '✅' : toast.type === 'error' ? '❌' : toast.type === 'warning' ? '⚠️' : 'ℹ️'}
+                        {toast.type === 'success' ? <CheckCircle2 size={18} /> :
+                            toast.type === 'error' ? <XCircle size={18} /> :
+                                toast.type === 'warning' ? <AlertTriangle size={18} /> :
+                                    <Info size={18} />}
                     </span>
                     <p className="flex-1">{toast.message}</p>
                 </div>

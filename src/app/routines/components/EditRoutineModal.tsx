@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { updateRoutine } from '@/app/actions/routine'
 import { useToast } from '@/app/components/Toast'
+import { Pencil, Save, X, Sparkles, Loader2 } from 'lucide-react'
 
 export function EditRoutineModal({
     routine,
@@ -26,7 +27,7 @@ export function EditRoutineModal({
         if (res?.error) {
             toast(res.error, 'error')
         } else {
-            toast('แก้ไขตารางฝึกเรียบร้อย! ✨', 'success')
+            toast('แก้ไขตารางฝึกเรียบร้อย!', 'success')
             onClose()
         }
     }
@@ -37,9 +38,12 @@ export function EditRoutineModal({
 
             <div className="relative bg-white dark:bg-zinc-900 rounded-3xl w-full max-w-lg shadow-2xl p-6 sm:p-8 animate-fade-in-up border border-gray-100 dark:border-zinc-800 m-auto mt-16 sm:mt-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">✏️ แก้ไขตารางฝึก</h2>
+                    <h2 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight flex items-center gap-2">
+                        <Pencil size={20} className="text-blue-600 dark:text-red-500" />
+                        แก้ไขตารางฝึก
+                    </h2>
                     <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 rounded-full w-8 h-8 flex items-center justify-center">
-                        ×
+                        <X size={18} />
                     </button>
                 </div>
 
@@ -63,7 +67,7 @@ export function EditRoutineModal({
                         </button>
                         <button type="submit" disabled={loading}
                             className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold shadow-sm transition-all duration-300 disabled:opacity-50 dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                            {loading ? 'กำลังบันทึก...' : '💾 บันทึกการแก้ไข'}
+                            {loading ? <span className="flex items-center gap-2"><Loader2 size={18} className="animate-spin" /> กำลังบันทึก...</span> : <span className="flex items-center gap-2"><Save size={18} /> บันทึกการแก้ไข</span>}
                         </button>
                     </div>
                 </form>

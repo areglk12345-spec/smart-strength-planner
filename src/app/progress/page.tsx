@@ -6,13 +6,16 @@ import { getAllExercisesWithProgress, getExerciseProgress, getAllPersonalRecords
 import { ProgressChart } from '../components/ProgressChart'
 import { VolumeChart } from '../components/VolumeChart'
 import { MuscleHeatmap } from '../components/MuscleHeatmap'
+import { MuscleVolumeChart } from '../components/MuscleVolumeChart'
 import { EmptyState } from '../components/EmptyState'
+import { LineChart, Trophy, Weight, TrendingUp, Grid3X3, BarChart2, Layout, ChevronLeft, ArrowRight, ArrowLeft, Dumbbell } from 'lucide-react'
 
 const TABS = [
-    { key: 'chart', label: '📈 กราฟ', activeColor: 'bg-blue-600 dark:bg-red-600 text-white shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.3)]' },
-    { key: 'prs', label: '🏆 PRs', activeColor: 'bg-yellow-500 dark:bg-yellow-600 text-white shadow-yellow-500/30 dark:shadow-[0_4px_15px_rgba(202,138,4,0.3)]' },
-    { key: 'volume', label: '⚖️ Volume', activeColor: 'bg-purple-600 dark:bg-purple-700 text-white shadow-purple-500/30 dark:shadow-[0_4px_15px_rgba(126,34,206,0.3)]' },
-    { key: 'heat', label: '📊 Heatmap', activeColor: 'bg-rose-500 dark:bg-rose-600 text-white shadow-rose-500/30 dark:shadow-[0_4px_15px_rgba(225,29,72,0.3)]' },
+    { key: 'chart', label: 'กราฟ', icon: <LineChart size={16} />, activeColor: 'bg-blue-600 dark:bg-red-600 text-white shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.3)]' },
+    { key: 'prs', label: 'PRs', icon: <Trophy size={16} />, activeColor: 'bg-yellow-500 dark:bg-yellow-600 text-white shadow-yellow-500/30 dark:shadow-[0_4px_15px_rgba(202,138,4,0.3)]' },
+    { key: 'volume', label: 'Volume', icon: <Weight size={16} />, activeColor: 'bg-purple-600 dark:bg-purple-700 text-white shadow-purple-500/30 dark:shadow-[0_4px_15px_rgba(126,34,206,0.3)]' },
+    { key: 'trends', label: 'Trends', icon: <TrendingUp size={16} />, activeColor: 'bg-indigo-600 dark:bg-indigo-700 text-white shadow-indigo-500/30 dark:shadow-[0_4px_15px_rgba(79,70,229,0.3)]' },
+    { key: 'heat', label: 'Heatmap', icon: <Grid3X3 size={16} />, activeColor: 'bg-rose-500 dark:bg-rose-600 text-white shadow-rose-500/30 dark:shadow-[0_4px_15px_rgba(225,29,72,0.3)]' },
 ]
 
 export default async function ProgressPage({
@@ -44,8 +47,12 @@ export default async function ProgressPage({
                 {/* Header */}
                 <div className="flex items-start sm:items-center justify-between mb-8 animate-fade-in-up flex-col sm:flex-row gap-4">
                     <div>
-                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50">← กลับหน้าหลัก</Link>
-                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm">📊 พัฒนาการการฝึก</h1>
+                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50 flex items-center gap-1">
+                            <ChevronLeft size={16} /> กลับหน้าหลัก
+                        </Link>
+                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm flex items-center gap-3">
+                            <BarChart2 size={32} className="text-blue-600 dark:text-red-500" /> พัฒนาการการฝึก
+                        </h1>
                     </div>
                     <ThemeToggle />
                 </div>
@@ -55,11 +62,12 @@ export default async function ProgressPage({
                     {TABS.map(t => (
                         <Link key={t.key}
                             href={`/progress?tab=${t.key}${activeTab === 'chart' && selectedId ? `&ex=${selectedId}` : ''}`}
-                            className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 shadow-sm ${activeTab === t.key
+                            className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all duration-300 shadow-sm flex items-center gap-2 ${activeTab === t.key
                                 ? t.activeColor
                                 : 'bg-white/70 dark:bg-zinc-900 border border-white/40 dark:border-zinc-800 text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:shadow-md'
                                 }`}>
-                            {t.label}
+                            {t.icon}
+                            <span>{t.label}</span>
                         </Link>
                     ))}
                 </div>
@@ -68,6 +76,13 @@ export default async function ProgressPage({
                 {activeTab === 'volume' && (
                     <div className="animate-fade-in-up">
                         <VolumeChart data={volumeData} />
+                    </div>
+                )}
+
+                {/* ── Trends Tab ── */}
+                {activeTab === 'trends' && (
+                    <div className="animate-fade-in-up">
+                        <MuscleVolumeChart />
                     </div>
                 )}
 
@@ -82,7 +97,7 @@ export default async function ProgressPage({
                 {activeTab === 'prs' && (
                     <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md overflow-hidden animate-fade-in-up">
                         <div className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-700 px-6 md:px-8 py-5 flex items-center gap-4">
-                            <span className="text-3xl drop-shadow-md">🏆</span>
+                            <Trophy size={32} className="text-white drop-shadow-md" />
                             <div>
                                 <h2 className="text-xl font-black text-white tracking-tight">สถิติสูงสุดส่วนตัว</h2>
                                 <p className="text-yellow-50 dark:text-yellow-100/80 text-xs font-bold uppercase tracking-wide mt-0.5">น้ำหนักสูงสุดที่เคยยกในแต่ละท่า</p>
@@ -92,7 +107,7 @@ export default async function ProgressPage({
                         {allPRs.length === 0 ? (
                             <div className="p-6">
                                 <EmptyState
-                                    icon="🏋️"
+                                    icon={<Dumbbell className="text-gray-300 dark:text-zinc-700" size={48} />}
                                     title="ยังไม่มีสถิติส่วนตัว"
                                     description="คุณต้องทำลายสถิติน้ำหนักสูงสุดของท่าออกกำลังกายก่อน จึงจะแสดงในกระดานนี้ เริ่มบันทึกการฝึกเพื่อสะสมสถิติกันเลย!"
                                     actionText="บันทึกสถิติวันนี้"
@@ -107,7 +122,7 @@ export default async function ProgressPage({
                                             <th className="text-left px-6 py-4">#</th>
                                             <th className="text-left px-4 py-4">ท่า</th>
                                             <th className="text-left px-4 py-4">กลุ่มกล้ามเนื้อ</th>
-                                            <th className="text-right px-4 py-4">🏆 PR</th>
+                                            <th className="text-right px-4 py-4 flex items-center justify-end gap-1"><Trophy size={14} className="text-yellow-500" /> PR</th>
                                             <th className="text-right px-6 py-4">วันที่ทำได้</th>
                                         </tr>
                                     </thead>
@@ -149,7 +164,7 @@ export default async function ProgressPage({
                     exercises.length === 0 ? (
                         <div className="animate-fade-in-up mt-8">
                             <EmptyState
-                                icon="📈"
+                                icon={<TrendingUp className="text-gray-300 dark:text-zinc-700" size={48} />}
                                 title="ยังไม่มีข้อมูลกราฟสถิติ"
                                 description="กราฟจะแสดงพัฒนาการของคุณหลังจากที่ได้บันทึกการยกน้ำหนักของท่าต่างๆ แล้ว"
                                 actionText="เริ่มต้นบันทึกการฝึก"
@@ -186,13 +201,13 @@ export default async function ProgressPage({
                                                     {activeExercise.muscle_group}
                                                 </span>
                                             </div>
-                                            <Link href={`/exercises/${activeExercise.id}`} className="text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 hover:underline transition-colors whitespace-nowrap">ดูรายละเอียด →</Link>
+                                            <Link href={`/exercises/${activeExercise.id}`} className="text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 hover:underline transition-colors whitespace-nowrap flex items-center gap-1">ดูรายละเอียด <ArrowRight size={14} /></Link>
                                         </div>
                                         <ProgressChart data={progressData} exerciseName={activeExercise.name} />
                                     </div>
                                 ) : (
                                     <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-12 text-center text-gray-500 dark:text-zinc-500 border border-white/40 dark:border-zinc-800 font-bold shadow-sm backdrop-blur-md flex flex-col items-center justify-center min-h-[400px]">
-                                        <span className="text-4xl mb-4 opacity-50">👈</span>
+                                        <ArrowLeft size={48} className="mb-4 opacity-20" />
                                         เลือกท่าออกกำลังกายทางซ้ายเพื่อดูกราฟ
                                     </div>
                                 )}

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { updateWorkoutLog } from '@/app/actions/log'
 import { useToast } from '@/app/components/Toast'
+import { Pencil, X, Save, Loader2 } from 'lucide-react'
 
 export function EditLogModal({
     log,
@@ -26,7 +27,7 @@ export function EditLogModal({
         if (res?.error) {
             toast(res.error, 'error')
         } else {
-            toast('อัปเดตประวัติการฝึกเรียบร้อย! ✨', 'success')
+            toast('อัปเดตประวัติการฝึกเรียบร้อย!', 'success')
             onClose()
         }
     }
@@ -37,9 +38,11 @@ export function EditLogModal({
 
             <div className="relative bg-white dark:bg-gray-800 rounded-2xl w-full max-w-lg shadow-2xl p-6 sm:p-8 animate-fade-in-up border border-gray-100 dark:border-gray-700 m-auto mt-16 sm:mt-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">✏️ แก้ไขข้อมูลประวัติการฝึก</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                        <Pencil size={20} className="text-blue-600 dark:text-red-500" /> แก้ไขข้อมูลประวัติการฝึก
+                    </h2>
                     <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition bg-gray-100 dark:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center">
-                        ×
+                        <X size={16} />
                     </button>
                 </div>
 
@@ -62,8 +65,9 @@ export function EditLogModal({
                             ยกเลิก
                         </button>
                         <button type="submit" disabled={loading}
-                            className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition disabled:opacity-50">
-                            {loading ? 'กำลังบันทึก...' : '💾 บันทึกการแก้ไข'}
+                            className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition disabled:opacity-50 flex items-center gap-2">
+                            {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                            {loading ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข'}
                         </button>
                     </div>
                 </form>

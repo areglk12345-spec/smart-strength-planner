@@ -5,6 +5,7 @@ import { ProfileForm } from './components/ProfileForm'
 import { WeightLogForm } from './components/WeightLogForm'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { PushNotificationToggle } from '../components/PushNotificationToggle'
+import { User, ChevronLeft, Scale, Target, TrendingUp, ClipboardList, TrendingDown } from 'lucide-react'
 
 interface WeightLog {
     id: string
@@ -16,8 +17,8 @@ interface WeightLog {
 function WeightChart({ logs }: { logs: WeightLog[] }) {
     if (logs.length < 2) {
         return (
-            <div className="flex flex-col items-center justify-center h-40 bg-gray-50 border border-dashed border-gray-300 rounded-xl text-gray-400">
-                <span className="text-2xl mb-2">📈</span>
+            <div className="flex flex-col items-center justify-center h-40 bg-gray-50 dark:bg-zinc-950/20 border border-dashed border-gray-300 dark:border-zinc-800 rounded-xl text-gray-400 dark:text-zinc-500">
+                <TrendingUp size={32} className="mb-2 opacity-50" />
                 <span className="text-sm">บันทึกน้ำหนักอย่างน้อย 2 ครั้งเพื่อดูกราฟ</span>
             </div>
         )
@@ -118,13 +119,16 @@ export default async function ProfilePage() {
             <div className="max-w-4xl mx-auto animate-fade-in-up">
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-black text-blue-600 dark:text-red-500 tracking-tight">โปรไฟล์ของฉัน 👤</h1>
+                        <div className="flex items-center gap-3">
+                            <User size={32} className="text-blue-600 dark:text-red-500" />
+                            <h1 className="text-3xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">โปรไฟล์ของฉัน</h1>
+                        </div>
                         <p className="text-gray-500 dark:text-zinc-400 font-medium text-sm mt-1">{user.email}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
-                        <Link href="/" className="text-sm font-bold text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 bg-white dark:bg-zinc-900 px-4 py-2.5 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 transition-colors">
-                            ← กลับหน้าหลัก
+                        <Link href="/" className="inline-flex items-center text-sm font-bold text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 bg-white dark:bg-zinc-900 px-4 py-2.5 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 transition-colors">
+                            <ChevronLeft size={16} className="mr-1" /> กลับหน้าหลัก
                         </Link>
                     </div>
                 </div>
@@ -150,13 +154,15 @@ export default async function ProfilePage() {
                                 )}
                                 <h2 className="text-xl font-black text-gray-900 dark:text-zinc-100">{displayName || 'Unnamed Athlete'}</h2>
                                 {latestWeight && (
-                                    <div className="mt-3 bg-blue-50 dark:bg-red-950/30 border border-blue-100 dark:border-red-900/50 text-blue-700 dark:text-red-400 px-4 py-1.5 rounded-xl text-sm font-bold tracking-wide">
-                                        ⚖️ น้ำหนักล่าสุด: {latestWeight} kg
+                                    <div className="mt-3 bg-blue-50 dark:bg-red-950/30 border border-blue-100 dark:border-red-900/50 text-blue-700 dark:text-red-400 px-4 py-1.5 rounded-xl text-sm font-bold tracking-wide flex items-center gap-2">
+                                        <Scale size={14} />
+                                        น้ำหนักล่าสุด: {latestWeight} kg
                                     </div>
                                 )}
                                 {profile?.goal && (
-                                    <div className="mt-4 text-center text-sm font-medium text-gray-500 dark:text-zinc-400 italic bg-gray-50 dark:bg-zinc-950/50 p-3 rounded-xl border border-gray-100 dark:border-zinc-800 w-full">
-                                        🎯 "{profile.goal}"
+                                    <div className="mt-4 text-center text-sm font-medium text-gray-500 dark:text-zinc-400 italic bg-gray-50 dark:bg-zinc-950/50 p-3 rounded-xl border border-gray-100 dark:border-zinc-800 w-full flex items-center justify-center gap-2">
+                                        <Target size={14} className="text-gray-400 dark:text-zinc-600" />
+                                        {profile.goal}
                                     </div>
                                 )}
                             </div>
@@ -182,7 +188,8 @@ export default async function ProfilePage() {
                         {/* Weight Chart */}
                         <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
                             <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
-                                <span>📈</span> กราฟน้ำหนักตัว
+                                <TrendingUp size={20} className="text-blue-500 dark:text-red-500" />
+                                กราฟน้ำหนักตัว
                                 {logs.length > 0 && (
                                     <span className="text-sm font-semibold text-gray-400 dark:text-zinc-500 ml-auto bg-gray-50 dark:bg-zinc-950/50 px-3 py-1 rounded-lg border border-gray-200 dark:border-zinc-800">{logs.length} รายการล่าสุด</span>
                                 )}
@@ -193,7 +200,8 @@ export default async function ProfilePage() {
                         {/* Add Weight Form */}
                         <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
                             <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
-                                <span>⚖️</span> บันทึกน้ำหนักวันนี้
+                                <Scale size={20} className="text-blue-500 dark:text-red-500" />
+                                บันทึกน้ำหนักวันนี้
                             </h3>
                             <WeightLogForm />
                         </div>
@@ -202,7 +210,8 @@ export default async function ProfilePage() {
                         {logs.length > 0 && (
                             <div className="bg-white/70 dark:bg-zinc-900 p-6 md:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
                                 <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 mb-6 flex items-center gap-2">
-                                    <span>📋</span> ประวัติน้ำหนัก
+                                    <ClipboardList size={20} className="text-blue-500 dark:text-red-500" />
+                                    ประวัติน้ำหนัก
                                 </h3>
                                 <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-zinc-800">
                                     <table className="w-full text-sm text-left">

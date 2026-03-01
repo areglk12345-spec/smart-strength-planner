@@ -1,3 +1,5 @@
+import { Flame, Trophy, Dumbbell, Star, Target, Zap } from 'lucide-react'
+
 interface StreakData {
     current: number
     best: number
@@ -65,14 +67,16 @@ export function StreakWidget({ streak }: { streak: StreakData }) {
                             <span className="text-xl font-bold text-gray-500 dark:text-zinc-500">วัน</span>
                         </div>
                     </div>
-                    <div className={`text-6xl sm:text-7xl ${isActive ? 'animate-bounce dark:drop-shadow-[0_0_15px_rgba(220,38,38,0.5)] drop-shadow-md' : 'opacity-20 grayscale'} bg-clip-text text-transparent bg-gradient-to-br ${theme.icon}`}>
-                        🔥
+                    <div className={`text-6xl sm:text-7xl ${isActive ? 'animate-bounce dark:drop-shadow-[0_0_15px_rgba(220,38,38,0.5)] drop-shadow-md' : 'opacity-20 grayscale'} flex items-center justify-center`}>
+                        <div className={`bg-clip-text text-transparent bg-gradient-to-br ${theme.icon}`}>
+                            <Flame size={64} fill="currentColor" />
+                        </div>
                     </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-6 pt-4 border-t border-gray-200/50 dark:border-zinc-800 gap-2">
-                    <div className="text-sm text-gray-600 dark:text-zinc-500 font-medium dark:tracking-wide">
-                        🏆 สถิติสูงสุด: <span className="font-bold text-gray-900 dark:text-zinc-300">{best} วัน</span>
+                    <div className="text-sm text-gray-600 dark:text-zinc-500 font-medium dark:tracking-wide flex items-center gap-1.5">
+                        <Trophy size={14} className="text-yellow-500" /> สถิติสูงสุด: <span className="font-bold text-gray-900 dark:text-zinc-300">{best} วัน</span>
                     </div>
                     {lastWorkout && (
                         <div className="text-sm text-gray-600 dark:text-zinc-500 dark:tracking-wide">
@@ -82,15 +86,18 @@ export function StreakWidget({ streak }: { streak: StreakData }) {
                 </div>
 
                 {!isActive && (
-                    <div className="mt-4 text-sm font-medium text-gray-700 dark:text-zinc-400 bg-gray-100/50 dark:bg-zinc-950/50 rounded-xl px-4 py-3 border border-gray-200/50 dark:border-zinc-800">
-                        💪 บันทึกการฝึกวันนี้เพื่อเริ่ม Streak ใหม่!
+                    <div className="mt-4 text-sm font-medium text-gray-700 dark:text-zinc-400 bg-gray-100/50 dark:bg-zinc-950/50 rounded-xl px-4 py-3 border border-gray-200/50 dark:border-zinc-800 flex items-center gap-2">
+                        <Dumbbell size={16} className="text-blue-500 dark:text-red-500" /> บันทึกการฝึกวันนี้เพื่อเริ่ม Streak ใหม่!
                     </div>
                 )}
                 {isActive && current >= 7 && (
-                    <div className={`mt-4 text-sm font-medium dark:font-bold ${theme.text} bg-white/50 dark:bg-red-950/20 rounded-xl px-4 py-3 border ${theme.border}`}>
-                        {current >= 30 ? '🌟 ต่อเนื่องมาแล้ว 1 เดือน! ยอดเยี่ยมมาก!' :
-                            current >= 14 ? '🎯 2 อาทิตย์ต่อเนื่อง! เก่งมากครับ!' :
-                                '⚡ 1 อาทิตย์แล้ว! ก้าวต่อไป!'}
+                    <div className={`mt-4 text-sm font-medium dark:font-bold ${theme.text} bg-white/50 dark:bg-red-950/20 rounded-xl px-4 py-3 border ${theme.border} flex items-center gap-2`}>
+                        {current >= 30 ? <Star size={16} className="animate-pulse" /> :
+                            current >= 14 ? <Target size={16} /> :
+                                <Zap size={16} />}
+                        {current >= 30 ? 'ต่อเนื่องมาแล้ว 1 เดือน! ยอดเยี่ยมมาก!' :
+                            current >= 14 ? '2 อาทิตย์ต่อเนื่อง! เก่งมากครับ!' :
+                                '1 อาทิตย์แล้ว! ก้าวต่อไป!'}
                     </div>
                 )}
             </div>

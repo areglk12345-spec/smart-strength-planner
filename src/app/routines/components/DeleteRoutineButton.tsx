@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { deleteRoutine } from '@/app/actions/routine'
 import { ConfirmModal } from '@/app/components/ConfirmModal'
 import { useToast } from '@/app/components/Toast'
+import { Trash2, Loader2 } from 'lucide-react'
 
 export function DeleteRoutineButton({ id }: { id: string }) {
     const [loading, setLoading] = useState(false)
@@ -36,7 +37,17 @@ export function DeleteRoutineButton({ id }: { id: string }) {
                 disabled={loading}
                 className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-transparent dark:border-red-900/30 px-4 py-2 rounded-xl transition-colors disabled:opacity-50 z-10 relative font-bold"
             >
-                {loading ? '⏳ กำลังลบ...' : '🗑 ลบ'}
+                {loading ? (
+                    <span className="flex items-center gap-1.5">
+                        <Loader2 size={14} className="animate-spin" />
+                        กำลังลบ...
+                    </span>
+                ) : (
+                    <span className="flex items-center gap-1.5">
+                        <Trash2 size={14} />
+                        ลบ
+                    </span>
+                )}
             </button>
 
             <ConfirmModal

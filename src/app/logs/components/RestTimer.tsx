@@ -1,7 +1,7 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Timer, X, Play, Pause, RotateCcw, Bell, Settings2 } from 'lucide-react';
+import { playTimerBeep } from '@/utils/audio';
 
 interface RestTimerProps {
     defaultRestTime?: number; // in seconds
@@ -13,6 +13,7 @@ export function RestTimer({ defaultRestTime = 90, onTimerEnd }: RestTimerProps) 
     const [isActive, setIsActive] = useState(false);
     const [isCustomizing, setIsCustomizing] = useState(false);
     const [customTime, setCustomTime] = useState(defaultRestTime);
+    const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
         let interval: NodeJS.Timeout;
@@ -23,14 +24,10 @@ export function RestTimer({ defaultRestTime = 90, onTimerEnd }: RestTimerProps) 
             }, 1000);
         } else if (isActive && timeLeft === 0) {
             setIsActive(false);
+            setIsFinished(true);
 
-            // Play sound
-            try {
-                const audio = new Audio('/sounds/timer-beep.mp3'); // We'll need to create this or use a browser beep
-                audio.play().catch(e => console.error("Audio playback failed:", e));
-            } catch (e) {
-                console.error("Audio not supported");
-            }
+            // Play sound using native Audio API utility
+            playTimerBeep();
 
             if (onTimerEnd) onTimerEnd();
         }
@@ -39,11 +36,16 @@ export function RestTimer({ defaultRestTime = 90, onTimerEnd }: RestTimerProps) 
     }, [isActive, timeLeft, onTimerEnd]);
 
     const toggleTimer = () => {
-        setIsActive(!isActive);
+        if (isFinished) {
+            resetTimer();
+        } else {
+            setIsActive(!isActive);
+        }
     };
 
     const resetTimer = () => {
         setIsActive(false);
+        setIsFinished(false);
         setTimeLeft(customTime);
     };
 
@@ -57,7 +59,8 @@ export function RestTimer({ defaultRestTime = 90, onTimerEnd }: RestTimerProps) 
     const applyCustomTime = () => {
         setTimeLeft(customTime);
         setIsCustomizing(false);
-        setIsActive(true); // Auto-start when custom time applied
+        setIsFinished(false);
+        setIsActive(true);
     };
 
     const formatTime = (seconds: number) => {
@@ -66,115 +69,142 @@ export function RestTimer({ defaultRestTime = 90, onTimerEnd }: RestTimerProps) 
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     };
 
-    const progress = ((customTime - timeLeft) / customTime) * 100;
+    const progress = (timeLeft / customTime) * 100;
 
     return (
-        <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-gray-200 dark:border-zinc-800 rounded-3xl p-5 shadow-sm mt-6 mb-6">
+        <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-gray-200 dark:border-zinc-800 rounded-[2rem] p-6 shadow-sm mb-8 relative overflow-hidden group">
+            {/* Background Glow */}
+            <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[60px] transition-colors duration-1000 pointer-events-none ${isActive ? 'bg-blue-500/10 dark:bg-red-500/10' : isFinished ? 'bg-green-500/10' : 'bg-gray-500/5'}`} />
+
             <div className="flex flex-col items-center justify-center">
-                <div className="flex justify-between w-full mb-2 items-center">
-                    <h3 className="text-sm font-black text-gray-700 dark:text-zinc-300 flex items-center gap-2 tracking-tight">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        จับเวลาพัก
+                <div className="flex justify-between w-full mb-6 items-center">
+                    <h3 className="text-xs font-black text-gray-500 dark:text-zinc-400 flex items-center gap-2 tracking-widest uppercase">
+                        <Timer size={14} className={isActive ? 'text-blue-500 dark:text-red-500 animate-pulse' : 'text-gray-400'} />
+                        พักตามกำหนดไอคอน
                     </h3>
 
                     <button
+                        type="button"
                         onClick={() => setIsCustomizing(!isCustomizing)}
-                        className="text-xs text-blue-600 dark:text-blue-400 font-bold hover:underline"
+                        className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-red-500 transition-colors rounded-xl hover:bg-gray-100 dark:hover:bg-zinc-800"
                     >
-                        ตั้งเวลา
+                        <Settings2 size={16} />
                     </button>
                 </div>
 
                 <AnimatePresence mode="wait">
                     {isCustomizing ? (
                         <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="flex items-center gap-2 my-4 w-full justify-center"
+                            key="custom"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            className="flex flex-col items-center gap-4 my-6 w-full"
                         >
-                            <input
-                                type="number"
-                                value={customTime}
-                                onChange={handleCustomTimeChange}
-                                className="w-20 bg-gray-100 dark:bg-zinc-950 border border-gray-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-center text-lg font-black text-gray-900 dark:text-white"
-                                min="1"
-                            />
-                            <span className="text-gray-500 dark:text-zinc-400 font-medium">วินาที</span>
+                            <div className="flex items-center gap-3">
+                                <input
+                                    type="number"
+                                    value={customTime}
+                                    onChange={handleCustomTimeChange}
+                                    className="w-24 bg-gray-50 dark:bg-zinc-950 border-2 border-transparent focus:border-blue-500 dark:focus:border-red-500 rounded-2xl px-4 py-3 text-center text-2xl font-black text-gray-900 dark:text-white outline-none transition-all"
+                                    min="1"
+                                />
+                                <span className="text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-wide text-xs">วินาที</span>
+                            </div>
                             <button
+                                type="button"
                                 onClick={applyCustomTime}
-                                className="ml-2 bg-blue-600 dark:bg-blue-600 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-sm shadow-blue-500/30 hover:bg-blue-700 transition"
+                                className="w-full max-w-[200px] bg-blue-600 dark:bg-red-600 text-white py-3 rounded-2xl font-black shadow-lg shadow-blue-500/20 dark:shadow-red-950/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
                             >
-                                ตกลง
+                                ตั้งเวลาใหม่
                             </button>
                         </motion.div>
                     ) : (
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
+                            key="timer"
+                            initial={{ opacity: 0, scale: 1.1 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="relative flex items-center justify-center my-4"
+                            className="relative flex items-center justify-center my-6"
                         >
-                            {/* Circular Progress (simplified) */}
-                            <svg className="w-32 h-32 transform -rotate-90">
+                            {/* Circular Progress */}
+                            <svg className="w-40 h-40 transform -rotate-90">
                                 <circle
-                                    cx="64" cy="64" r="58"
+                                    cx="80" cy="80" r="74"
                                     stroke="currentColor"
-                                    strokeWidth="8"
+                                    strokeWidth="10"
                                     fill="transparent"
                                     className="text-gray-100 dark:text-zinc-800"
                                 />
-                                <circle
-                                    cx="64" cy="64" r="58"
+                                <motion.circle
+                                    cx="80" cy="80" r="74"
                                     stroke="currentColor"
-                                    strokeWidth="8"
+                                    strokeWidth="10"
+                                    strokeLinecap="round"
                                     fill="transparent"
-                                    strokeDasharray="364.4"
-                                    strokeDashoffset={364.4 - (364.4 * progress) / 100}
-                                    className={`transition-all duration-1000 ease-linear ${timeLeft <= 10 && isActive ? 'text-red-500 dark:text-red-500' : 'text-blue-500 dark:text-blue-500'}`}
+                                    strokeDasharray="465"
+                                    strokeDashoffset={465 - (465 * progress) / 100}
+                                    className={`transition-all duration-1000 ease-linear ${isFinished ? 'text-green-500' : isActive ? 'text-blue-500 dark:text-red-600' : 'text-gray-300 dark:text-zinc-600'}`}
                                 />
                             </svg>
-                            <div className="absolute text-3xl font-black text-gray-900 dark:text-zinc-100 tracking-tighter">
-                                {formatTime(timeLeft)}
+                            <div className="absolute flex flex-col items-center">
+                                <span className={`text-4xl font-black tracking-tighter transition-colors duration-500 ${isFinished ? 'text-green-600' : 'text-gray-900 dark:text-zinc-100'}`}>
+                                    {formatTime(timeLeft)}
+                                </span>
+                                {isFinished && (
+                                    <motion.span
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="text-[10px] font-black text-green-600 uppercase tracking-widest mt-1"
+                                    >
+                                        ลุยต่อ!
+                                    </motion.span>
+                                )}
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                <div className="flex gap-3 w-full justify-center">
+                <div className="flex gap-4 w-full justify-center">
                     {!isCustomizing && (
                         <>
                             <button
-                                onClick={toggleTimer}
-                                className={`flex-1 max-w-[120px] py-2.5 rounded-xl font-bold text-shadow-sm transition-all text-white shadow-sm ${isActive
-                                        ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/30'
-                                        : 'bg-green-500 hover:bg-green-600 shadow-green-500/30'
-                                    }`}
+                                type="button"
+                                onClick={resetTimer}
+                                className="p-4 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-600 dark:text-zinc-300 font-bold rounded-2xl transition-all shadow-sm active:scale-95"
+                                title="Reset"
                             >
-                                {isActive ? 'หยุดชั่วคราว' : timeLeft < customTime ? 'ทำต่อ' : 'เริ่มจับเวลา'}
+                                <RotateCcw size={22} />
                             </button>
                             <button
-                                onClick={resetTimer}
-                                disabled={timeLeft === customTime && !isActive}
-                                className="flex-1 max-w-[120px] py-2.5 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-zinc-300 font-bold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                type="button"
+                                onClick={toggleTimer}
+                                className={`flex-1 py-4 rounded-3xl font-black text-white shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${isFinished
+                                    ? 'bg-green-500 shadow-green-500/30'
+                                    : isActive
+                                        ? 'bg-orange-500 shadow-orange-500/30'
+                                        : 'bg-blue-600 dark:bg-red-600 shadow-blue-500/30 dark:shadow-red-950/40'
+                                    }`}
                             >
-                                รีเซ็ต
+                                {isFinished ? <Bell size={24} /> : isActive ? <Pause size={24} /> : <Play size={24} />}
+                                <span>{isFinished ? 'เริ่มใหม่' : isActive ? 'หยุด' : 'พักต่อ'}</span>
                             </button>
                         </>
                     )}
                 </div>
             </div>
 
-            {/* Auto-start trigger helper for parent components */}
+            {/* Hidden hook for parent components to trigger timer */}
             <button
+                type="button"
                 id="hidden-timer-start-btn"
                 className="hidden"
                 onClick={() => {
                     setTimeLeft(customTime);
+                    setIsFinished(false);
                     setIsActive(true);
                 }}
             />
         </div>
     );
 }
+

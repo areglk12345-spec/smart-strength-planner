@@ -1,3 +1,5 @@
+import { Dumbbell, Calendar, Flame, ClipboardList } from 'lucide-react'
+
 export function DashboardStats({
     totalExercises,
     totalRoutines,
@@ -11,28 +13,28 @@ export function DashboardStats({
 }) {
     const stats = [
         {
-            icon: '💪',
+            icon: <Dumbbell size={24} className="text-white" />,
             label: 'ท่าออกกำลังกาย',
             value: totalExercises,
             unit: 'ท่า',
             gradient: 'from-blue-500 to-cyan-400 dark:from-red-600 dark:to-rose-600',
         },
         {
-            icon: '🗓️',
+            icon: <Calendar size={24} className="text-white" />,
             label: 'ตารางฝึกของคุณ',
             value: totalRoutines,
             unit: 'ตาราง',
             gradient: 'from-emerald-500 to-teal-400 dark:from-red-500 dark:to-red-700',
         },
         {
-            icon: '🔥',
+            icon: <Flame size={24} className="text-white" />,
             label: 'ส่วนที่เน้นมากที่สุด',
             value: topMuscleGroup,
             unit: null,
             gradient: 'from-orange-500 to-red-400 dark:from-rose-600 dark:to-red-500',
         },
         {
-            icon: '📋',
+            icon: <ClipboardList size={24} className="text-white" />,
             label: 'ตารางล่าสุด',
             value: latestRoutineName || 'ยังไม่มี',
             unit: null,

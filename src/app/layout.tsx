@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Strength Planner 💪",
+  title: "Smart Strength Planner",
   description: "ออกแบบโปรแกรมการฝึกและติดตามความก้าวหน้าของคุณ",
   manifest: "/manifest.json",
   appleWebApp: {

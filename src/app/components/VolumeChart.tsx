@@ -1,3 +1,5 @@
+import { Weight } from 'lucide-react'
+
 interface VolumePoint {
     date: string
     volume: number
@@ -7,7 +9,9 @@ export function VolumeChart({ data }: { data: VolumePoint[] }) {
     if (data.length === 0) {
         return (
             <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-8 text-center text-gray-400 dark:text-zinc-500 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
-                <div className="text-4xl mb-3 grayscale opacity-50">⚖️</div>
+                <div className="text-4xl mb-3 text-gray-300 dark:text-zinc-700">
+                    <Weight size={48} />
+                </div>
                 <p className="text-sm font-medium">ยังไม่มีข้อมูล Volume<br />บันทึก sets/reps/weight ในการฝึกก่อนครับ</p>
             </div>
         )
@@ -28,7 +32,9 @@ export function VolumeChart({ data }: { data: VolumePoint[] }) {
     return (
         <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-5 sm:p-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md">
             <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 pb-4">
-                <h3 className="font-black text-gray-900 dark:text-zinc-100 tracking-tight text-lg">⚖️ Volume ต่อเซสชัน</h3>
+                <h3 className="font-black text-gray-900 dark:text-zinc-100 tracking-tight text-lg flex items-center gap-2">
+                    <Weight size={20} className="text-blue-500 dark:text-red-500" /> Volume ต่อเซสชัน
+                </h3>
                 <span className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-zinc-500 bg-gray-100 dark:bg-zinc-800 px-2.5 py-1 rounded-lg">30 วันล่าสุด</span>
             </div>
 

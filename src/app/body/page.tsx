@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ThemeToggle } from '@/app/components/ThemeToggle'
+import { ChevronLeft, Zap } from 'lucide-react'
 import { getMeasurements, getProgressPhotos } from '@/app/actions/body'
 import { BodyClient } from './BodyClient'
 
@@ -23,13 +24,13 @@ export default async function BodyPage() {
             <div className="sticky top-0 z-40 glass-card rounded-none border-x-0 border-t-0 px-6 py-3 border-b-white/40 dark:border-b-red-500/20">
                 <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <Link href="/" className="text-sm font-bold text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 transition-colors">
-                            ← หน้าหลัก
+                        <Link href="/" className="text-sm font-bold text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 transition-colors flex items-center gap-1">
+                            <ChevronLeft size={14} /> หน้าหลัก
                         </Link>
                         <span className="text-gray-300 dark:text-zinc-700">/</span>
                         <h1 className="text-lg font-black text-gray-900 dark:text-zinc-100">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-red-400 dark:to-orange-500">
-                                💪 Body Tracker
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-red-400 dark:to-orange-500 flex items-center gap-2">
+                                <Zap size={20} fill="currentColor" className="text-emerald-500 dark:text-red-500" /> Body Tracker
                             </span>
                         </h1>
                     </div>

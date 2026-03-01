@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
+import { AlertTriangle, Zap, Info, Loader2 } from 'lucide-react'
 
 interface ConfirmModalProps {
     isOpen: boolean
@@ -38,7 +39,9 @@ export function ConfirmModal({
                     variant === 'warning' ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400' :
                         'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
                     }`}>
-                    {variant === 'danger' ? '⚠️' : variant === 'warning' ? '⚡' : 'ℹ️'}
+                    {variant === 'danger' ? <AlertTriangle size={24} /> :
+                        variant === 'warning' ? <Zap size={24} /> :
+                            <Info size={24} />}
                 </div>
 
                 <h3 className="text-xl font-bold text-gray-900 dark:text-zinc-100 mb-2">{title}</h3>
@@ -60,7 +63,7 @@ export function ConfirmModal({
                                 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'
                             }`}
                     >
-                        {isLoading && <span className="animate-spin text-sm">⏳</span>}
+                        {isLoading && <Loader2 size={18} className="animate-spin" />}
                         {confirmText}
                     </button>
                 </div>

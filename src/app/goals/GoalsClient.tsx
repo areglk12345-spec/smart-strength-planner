@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createGoal, deleteGoal, updateGoal, upsertBodyGoal } from '../actions/goals'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { EmptyState } from '../components/EmptyState'
+import { Target, Plus, Trash2, Pencil, Save, Trophy, TrendingUp, X, Dumbbell, Loader2, Calendar } from 'lucide-react'
 
 interface Exercise {
     id: string
@@ -78,7 +79,7 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
                 className="w-full mb-8 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm border-2 border-dashed border-gray-300 dark:border-zinc-700 hover:border-blue-500 dark:hover:border-red-500 hover:bg-blue-50 dark:hover:bg-red-950/20 rounded-3xl p-6 text-center text-gray-600 dark:text-zinc-400 font-bold transition-all duration-300 group flex flex-col items-center justify-center gap-3 shadow-sm hover:shadow-md"
             >
                 <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-zinc-800 group-hover:bg-blue-100 dark:group-hover:bg-red-950/60 text-gray-500 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-red-400 flex items-center justify-center transition-all duration-300 shadow-inner group-hover:scale-110">
-                    <span className="text-xl">➕</span>
+                    {showForm ? <X size={24} /> : <Plus size={24} />}
                 </div>
                 <span className="tracking-wide">{showForm ? 'ยกเลิกการเพิ่ม' : 'เพิ่มเป้าหมายใหม่'}</span>
             </button>
@@ -86,7 +87,9 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
             {/* Create form */}
             {showForm && (
                 <form action={handleCreate} className="mb-8 p-6 sm:p-8 bg-white/70 dark:bg-zinc-900 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
-                    <h3 className="text-2xl font-black mb-6 text-gray-900 dark:text-zinc-100 items-center flex gap-2 tracking-tight">🎯 จัดทำเป้าหมายใหม่</h3>
+                    <h3 className="text-2xl font-black mb-6 text-gray-900 dark:text-zinc-100 items-center flex gap-2 tracking-tight">
+                        <Target size={28} className="text-blue-600 dark:text-red-500" /> จัดทำเป้าหมายใหม่
+                    </h3>
                     <div className="space-y-5">
                         <div>
                             <label className="block text-sm font-bold text-gray-700 dark:text-zinc-300 mb-1.5">เลือกท่าออกกำลังกาย <span className="text-red-500">*</span></label>
@@ -125,7 +128,7 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
             {goals.length === 0 ? (
                 <div className="mt-6">
                     <EmptyState
-                        icon="🎯"
+                        icon={<Target size={48} />}
                         title="ยังไม่มีเป้าหมายการฝึก"
                         description="ตั้งเป้าหมายน้ำหนักของท่าที่คุณอยากไปให้ถึง แล้วเราจะคำนวณความคืบหน้าให้คุณจากสถิติที่คุณบันทึก!"
                         actionText="เพิ่มเป้าหมายแรก"
@@ -145,25 +148,29 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
                                 <div className="flex items-start justify-between gap-4 mb-4 relative group">
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            {achieved && <span className="text-green-600 dark:text-green-500 text-lg drop-shadow-sm">🏆</span>}
+                                            {achieved && <Trophy size={20} className="text-yellow-500 dark:text-yellow-400 drop-shadow-sm" />}
                                             <h3 className="font-black text-xl text-gray-900 dark:text-zinc-100 tracking-tight">
                                                 {goal.exercises?.name ?? 'ไม่ทราบท่า'}
                                             </h3>
                                         </div>
                                         <p className="text-xs font-bold text-gray-500 dark:text-zinc-400 mt-1 uppercase tracking-wide">
                                             {goal.exercises?.muscle_group}
-                                            {goal.target_date && ` • 🎯 ${new Date(goal.target_date).toLocaleDateString('th-TH', { month: 'short', day: 'numeric', year: '2-digit' })}`}
+                                            {goal.target_date && (
+                                                <span className="flex items-center gap-1 inline-flex ml-2">
+                                                    • <Calendar size={12} /> {new Date(goal.target_date).toLocaleDateString('th-TH', { month: 'short', day: 'numeric', year: '2-digit' })}
+                                                </span>
+                                            )}
                                         </p>
                                         {goal.notes && <p className="text-sm text-gray-600 dark:text-zinc-400 mt-2 font-medium bg-gray-50 dark:bg-zinc-950/50 px-3 py-2 rounded-xl border border-gray-100 dark:border-zinc-800">"{goal.notes}"</p>}
                                     </div>
                                     <div className="flex gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                                         <button onClick={() => setEditingGoalId(goal.id)}
                                             className="text-gray-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-red-400 transition-colors text-sm p-2 rounded-xl bg-gray-50 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-red-950/30">
-                                            ✏️
+                                            <Pencil size={16} />
                                         </button>
                                         <button onClick={() => setGoalToDelete(goal.id)}
                                             className="text-gray-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 transition-colors text-sm p-2 rounded-xl bg-gray-50 dark:bg-zinc-800 hover:bg-red-50 dark:hover:bg-red-950/30">
-                                            🗑️
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
@@ -195,7 +202,8 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
                                                 </button>
                                                 <button type="submit" disabled={loading}
                                                     className="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-xl transition-all shadow-sm disabled:opacity-50 flex items-center gap-1.5">
-                                                    💾 บันทึก
+                                                    {loading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                                                    บันทึก
                                                 </button>
                                             </div>
                                         </div>
@@ -235,12 +243,15 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
             {/* ── Body Composition Goals ─────────────────────────────────── */}
             <div className="mt-10">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-black text-gray-800 dark:text-zinc-100 tracking-tight">💪 เป้าหมายสัดส่วนร่างกาย</h2>
+                    <h2 className="text-2xl font-black text-gray-800 dark:text-zinc-100 tracking-tight flex items-center gap-2">
+                        <Dumbbell size={24} className="text-gray-600 dark:text-zinc-400" /> เป้าหมายสัดส่วนร่างกาย
+                    </h2>
                     <button
                         onClick={() => setShowBodyForm(v => !v)}
-                        className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline"
+                        className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline flex items-center gap-1"
                     >
-                        {showBodyForm ? 'ยกเลิก' : (bodyGoal ? '✏️ แก้ไข' : '+ ตั้งเป้าหมาย')}
+                        {showBodyForm ? <X size={14} /> : (bodyGoal ? <Pencil size={14} /> : <Plus size={14} />)}
+                        {showBodyForm ? 'ยกเลิก' : (bodyGoal ? 'แก้ไข' : 'ตั้งเป้าหมาย')}
                     </button>
                 </div>
 
@@ -263,9 +274,9 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
                 )}
 
                 {!bodyGoal && !showBodyForm && (
-                    <div className="bg-white/70 dark:bg-zinc-900 p-8 rounded-2xl border border-dashed border-gray-200 dark:border-zinc-700 text-center text-gray-500 dark:text-zinc-500">
-                        <div className="text-3xl mb-2">💪</div>
-                        <p className="font-semibold text-sm">ยังไม่ได้ตั้งเป้าหมายสัดส่วน กด "+ ตั้งเป้าหมาย" เพื่อเริ่มต้น</p>
+                    <div className="bg-white/70 dark:bg-zinc-900 p-8 rounded-2xl border border-dashed border-gray-200 dark:border-zinc-700 text-center text-gray-500 dark:text-zinc-500 flex flex-col items-center">
+                        <Dumbbell size={48} className="mb-2 opacity-20" />
+                        <p className="font-semibold text-sm">ยังไม่ได้ตั้งเป้าหมายสัดส่วน กด "ตั้งเป้าหมาย" เพื่อเริ่มต้น</p>
                     </div>
                 )}
 
@@ -308,8 +319,9 @@ export function GoalsClient({ goals, exercises, bodyGoal: initialBodyGoal }: { g
                         </div>
                         <div className="flex justify-end gap-2 pt-2 border-t border-gray-100 dark:border-zinc-800">
                             <button type="button" onClick={() => setShowBodyForm(false)} className="px-4 py-2 text-xs font-bold text-gray-600 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-800 rounded-xl">ยกเลิก</button>
-                            <button type="submit" disabled={loading} className="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-xl disabled:opacity-50">
-                                {loading ? 'กำลังบันทึก...' : '💾 บันทึก'}
+                            <button type="submit" disabled={loading} className="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-xl disabled:opacity-50 flex items-center gap-1.5">
+                                {loading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
                             </button>
                         </div>
                     </form>

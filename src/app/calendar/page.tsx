@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
 import { EmptyState } from '../components/EmptyState'
+import { ChevronLeft, ChevronRight, Calendar, Moon, History, ClipboardList } from 'lucide-react'
 
 export async function getWorkoutDates(year: number, month: number): Promise<string[]> {
     const supabase = await createClient()
@@ -64,8 +65,12 @@ export default async function CalendarPage({
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8 animate-fade-in-up">
                     <div>
-                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50">← กลับหน้าหลัก</Link>
-                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm">📅 ปฏิทินการฝึก</h1>
+                        <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50 flex items-center gap-1">
+                            <ChevronLeft size={16} /> กลับหน้าหลัก
+                        </Link>
+                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic drop-shadow-sm flex items-center gap-3">
+                            <Calendar size={32} className="text-blue-600 dark:text-red-500" /> ปฏิทินการฝึก
+                        </h1>
                     </div>
                     <div className="bg-white/70 dark:bg-zinc-900 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md px-5 py-2.5 rounded-2xl text-center">
                         <div className="text-3xl font-black text-blue-600 dark:text-red-500 drop-shadow-sm">{totalWorkouts}</div>
@@ -77,15 +82,15 @@ export default async function CalendarPage({
                 <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-5 sm:p-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-zinc-800">
                         <Link href={`/calendar?y=${prevYear}&m=${prevMonth}`}
-                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30">
-                            ‹
+                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30 flex items-center justify-center">
+                            <ChevronLeft size={20} />
                         </Link>
                         <h2 className="text-2xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">
                             {THAI_MONTHS[month - 1]} {year + 543}
                         </h2>
                         <Link href={`/calendar?y=${nextYear}&m=${nextMonth}`}
-                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30">
-                            ›
+                            className="p-3 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 text-blue-600 dark:text-red-400 font-black transition-all text-xl shadow-sm border border-transparent dark:hover:border-red-900/30 flex items-center justify-center">
+                            <ChevronRight size={20} />
                         </Link>
                     </div>
 
@@ -144,7 +149,7 @@ export default async function CalendarPage({
                 {workoutDates.length > 0 ? (
                     <div className="bg-white/70 dark:bg-zinc-900 rounded-3xl p-6 mt-6 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
                         <h3 className="font-black text-gray-800 dark:text-zinc-100 mb-4 text-base tracking-tight flex items-center gap-2">
-                            <span>📅</span> วันที่ฝึกเดือนนี้
+                            <Calendar size={18} className="text-blue-500" /> วันที่ฝึกเดือนนี้
                         </h3>
                         <div className="flex flex-wrap gap-2.5">
                             {workoutDates.sort().map(d => (
@@ -157,7 +162,7 @@ export default async function CalendarPage({
                 ) : (
                     <div className="mt-6 animate-fade-in-up">
                         <EmptyState
-                            icon="😴"
+                            icon={<Moon size={48} className="text-blue-300 dark:text-zinc-700" />}
                             title="เดือนนี้ยังไม่ได้ฝึกเลย"
                             description="ร่างกายรอการท้าทายอยู่! เริ่มต้นสร้างวินัยด้วยการฝึกเซสชันแรกของเดือนกัน"
                             actionText="บันทึกการฝึก"
@@ -167,8 +172,8 @@ export default async function CalendarPage({
                 )}
 
                 <div className="mt-6 flex gap-3">
-                    <Link href="/logs" className="bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold w-full text-center py-4 text-sm rounded-xl transition-all shadow-sm dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] tracking-wide">
-                        📝 ดูประวัติการฝึกทั้งหมด
+                    <Link href="/logs" className="bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-black w-full text-center py-4 text-sm rounded-xl transition-all shadow-md dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] tracking-wide flex items-center justify-center gap-2">
+                        <History size={18} /> ดูประวัติการฝึกทั้งหมด
                     </Link>
                 </div>
             </div>

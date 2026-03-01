@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { ProgressChart } from '../../components/ProgressChart'
 import { getExerciseProgress } from '../../actions/log'
+import { ChevronLeft, Play, Camera, TrendingUp, FileText, Timer, History, Edit3 } from 'lucide-react'
 
 function getYouTubeEmbedUrl(url: string | null | undefined): string | null {
     if (!url) return null
@@ -35,7 +36,7 @@ export default async function ExerciseDetailsPage({ params }: { params: Promise<
             <div className="max-w-3xl mx-auto animate-fade-in-up">
                 <div className="flex items-center justify-between mb-8">
                     <Link href="/" className="inline-flex items-center text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 transition-all group bg-white dark:bg-zinc-900 px-4 py-2.5 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800">
-                        <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
+                        <ChevronLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" />
                         กลับไปยังหน้าหลัก
                     </Link>
                     <ThemeToggle />
@@ -51,7 +52,9 @@ export default async function ExerciseDetailsPage({ params }: { params: Promise<
                     </div>
 
                     <div className="mb-8">
-                        <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-4 border-l-4 border-blue-500 dark:border-red-500 pl-3 tracking-tight">รายละเอียดของท่าออกกำลังกาย</h2>
+                        <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-4 border-l-4 border-blue-500 dark:border-red-500 pl-3 flex items-center gap-2 tracking-tight">
+                            <FileText size={20} className="text-blue-600 dark:text-red-500" /> รายละเอียดของท่าออกกำลังกาย
+                        </h2>
                         <div className="bg-gray-50/50 dark:bg-zinc-950/50 p-6 rounded-2xl text-gray-700 dark:text-zinc-300 font-medium leading-relaxed min-h-[6rem] border border-gray-200 dark:border-zinc-800">
                             {exercise.description || <span className="text-gray-400 dark:text-zinc-500 italic">ไม่มีคำอธิบายสำหรับท่านี้</span>}
                         </div>
@@ -60,7 +63,7 @@ export default async function ExerciseDetailsPage({ params }: { params: Promise<
                     {embedUrl ? (
                         <div className="mb-8">
                             <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-4 border-l-4 border-red-500 pl-3 flex items-center gap-2 tracking-tight">
-                                <span>▶️</span> วิดีโอสาธิตท่า
+                                <Play size={20} className="text-red-500 fill-red-500/20" /> วิดีโอสาธิตท่า
                             </h2>
                             <div className="relative rounded-2xl overflow-hidden shadow-lg dark:shadow-[0_4px_20px_rgba(220,38,38,0.1)] border border-gray-200 dark:border-zinc-800" style={{ paddingTop: '56.25%' }}>
                                 <iframe src={embedUrl} className="absolute top-0 left-0 w-full h-full"
@@ -70,28 +73,26 @@ export default async function ExerciseDetailsPage({ params }: { params: Promise<
                         </div>
                     ) : (
                         <div className="mb-8 border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl p-10 flex flex-col items-center justify-center text-center bg-gray-50/50 dark:bg-zinc-950/30">
-                            <span className="text-4xl mb-4 opacity-80">📸</span>
+                            <Camera size={48} className="mb-4 opacity-20" />
                             <span className="text-base font-bold text-gray-600 dark:text-zinc-400 mb-1">ยังไม่มีวิดีโอสาธิตสำหรับท่านี้</span>
                             <span className="text-sm text-gray-500 dark:text-zinc-500 font-medium">ผู้สร้างท่าสามารถเพิ่มลิงก์ YouTube ได้ตอนเพิ่มท่า</span>
                         </div>
                     )}
 
-                    {user && (
-                        <div className="pt-8 border-t border-gray-100 dark:border-zinc-800">
-                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-6 border-l-4 border-blue-500 dark:border-red-500 pl-3 flex items-center gap-2 tracking-tight">
-                                <span>📈</span> พัฒนาการของคุณ
-                            </h2>
-                            <ProgressChart data={progressData} exerciseName={exercise.name} />
-                            <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-100 dark:border-zinc-800">
-                                <Link href={`/progress?ex=${exercise.id}`} className="text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 hover:underline transition-colors">
-                                    ดูกราฟแบบเต็ม →
-                                </Link>
-                                <Link href="/logs/new" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-sm shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                                    <span>📝</span> บันทึกสถิติวันนี้
-                                </Link>
-                            </div>
+                    <div className="pt-8 border-t border-gray-100 dark:border-zinc-800">
+                        <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-6 border-l-4 border-blue-500 dark:border-red-500 pl-3 flex items-center gap-2 tracking-tight">
+                            <TrendingUp size={24} className="text-blue-600 dark:text-red-500" /> พัฒนาการของคุณ
+                        </h2>
+                        <ProgressChart data={progressData} exerciseName={exercise.name} />
+                        <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-100 dark:border-zinc-800">
+                            <Link href={`/progress?ex=${exercise.id}`} className="text-sm font-bold text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 hover:underline transition-colors">
+                                ดูกราฟแบบเต็ม →
+                            </Link>
+                            <Link href="/logs/new" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white text-sm font-bold px-6 py-3 rounded-xl transition-all shadow-sm shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
+                                <Edit3 size={16} /> บันทึกสถิติวันนี้
+                            </Link>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </main>

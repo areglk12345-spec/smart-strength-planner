@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { CloneRoutineButton } from '../../components/CloneRoutineButton'
 import { ThemeToggle } from '../../../components/ThemeToggle'
+import { ChevronLeft, Globe, Sparkles } from 'lucide-react'
 
 async function getPublicRoutine(id: string) {
     const supabase = await createClient()
@@ -46,7 +47,7 @@ export default async function PublicRoutinePage({ params }: { params: Promise<{ 
                 {/* Top bar */}
                 <div className="flex items-center justify-between mb-8">
                     <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition">
-                        <span>←</span> Smart Strength Planner
+                        <ChevronLeft size={14} /> Smart Strength Planner
                     </Link>
                     <ThemeToggle />
                 </div>
@@ -54,7 +55,7 @@ export default async function PublicRoutinePage({ params }: { params: Promise<{ 
                 {/* Shared badge */}
                 <div className="flex items-center gap-2 mb-4">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 px-3 py-1 rounded-full">
-                        🌐 ตารางฝึกสาธารณะ
+                        <Globe size={12} /> ตารางฝึกสาธารณะ
                     </span>
                 </div>
 
@@ -100,7 +101,9 @@ export default async function PublicRoutinePage({ params }: { params: Promise<{ 
 
                 {/* Clone CTA */}
                 <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 text-center">
-                    <div className="text-2xl mb-2">💪</div>
+                    <div className="flex justify-center mb-2">
+                        <Sparkles size={32} className="text-yellow-500 fill-yellow-500/20" />
+                    </div>
                     <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">
                         ชอบตารางนี้ไหม?
                     </h2>

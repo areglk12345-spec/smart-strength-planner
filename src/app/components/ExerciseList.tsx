@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { DeleteButton } from './DeleteButton'
 import { EditExerciseModal } from './EditExerciseModal'
+import { Search, List, Pencil, ArrowRight } from 'lucide-react'
 
 interface Exercise {
     id: string;
@@ -43,18 +44,21 @@ export function ExerciseList({
                 />
             )}
 
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-zinc-100 flex items-center gap-2">
-                <span className="text-blue-500 dark:text-red-500">☰</span> ท่าออกกำลังกายพื้นฐาน (จากฐานข้อมูล)
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-zinc-100 flex items-center gap-2 tracking-tight">
+                <List size={24} className="text-blue-500 dark:text-red-500" /> ท่าออกกำลังกายพื้นฐาน (จากฐานข้อมูล)
             </h2>
 
             <div className="mb-6 space-y-4">
-                <input
-                    type="search"
-                    placeholder="🔍 ค้นหาท่าออกกำลังกาย..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500/50 focus:border-blue-500 dark:focus:border-red-500 outline-none transition-all text-sm shadow-sm bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-600"
-                />
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-600" size={18} />
+                    <input
+                        type="search"
+                        placeholder="ค้นหาท่าออกกำลังกาย..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-11 pr-4 py-3 border border-gray-300 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500/50 focus:border-blue-500 dark:focus:border-red-500 outline-none transition-all text-sm shadow-sm bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-600"
+                    />
+                </div>
 
                 <div className="flex flex-wrap gap-2">
                     {muscleGroups.map(muscle => (
@@ -101,9 +105,9 @@ export function ExerciseList({
                                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-3 items-end ml-4 shrink-0">
                                         <Link
                                             href={`/exercises/${exercise.id}`}
-                                            className="text-xs text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 bg-blue-50 dark:bg-red-950/20 hover:bg-blue-100 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-lg border border-transparent dark:border-red-900/30 transition-all font-bold whitespace-nowrap"
+                                            className="text-xs text-blue-600 dark:text-red-400 hover:text-blue-800 dark:hover:text-red-300 bg-blue-50 dark:bg-red-950/20 hover:bg-blue-100 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-lg border border-transparent dark:border-red-900/30 transition-all font-bold whitespace-nowrap flex items-center gap-1"
                                         >
-                                            ดูรายละเอียด →
+                                            ดูรายละเอียด <ArrowRight size={12} />
                                         </Link>
                                         <div className="flex items-center gap-3 mt-auto">
                                             <button
@@ -111,7 +115,7 @@ export function ExerciseList({
                                                 className="text-gray-400 hover:text-blue-500 dark:hover:text-red-400 transition-colors text-sm p-1 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded"
                                                 title="แก้ไขท่า"
                                             >
-                                                ✏️
+                                                <Pencil size={16} />
                                             </button>
                                             <DeleteButton id={exercise.id} />
                                         </div>

@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { cloneRoutine } from '@/app/actions/routine'
-import { useToast } from '@/app/components/Toast'
+import { Copy, Loader2, Check } from 'lucide-react'
+import { cloneRoutine } from '../../actions/routine'
+import { useToast } from '../../components/Toast'
 
 export function CloneRoutineButton({ routineId, isLoggedIn }: { routineId: string; isLoggedIn: boolean }) {
-    const [loading, setLoading] = useState(false)
+    const [isCloning, setIsCloning] = useState(false)
+    const [isDone, setIsDone] = useState(false)
     const router = useRouter()
     const { toast } = useToast()
 
@@ -15,28 +17,35 @@ export function CloneRoutineButton({ routineId, isLoggedIn }: { routineId: strin
             router.push('/login')
             return
         }
-        setLoading(true)
+        setIsCloning(true)
         const res = await cloneRoutine(routineId)
-        setLoading(false)
+        setIsCloning(false)
+
         if (res.error) {
             toast(res.error, 'error')
         } else if (res.newRoutineId) {
-            toast('คัดลอกตารางฝึกเรียบร้อย 🚀', 'success')
-            router.push(`/routines/${res.newRoutineId}`)
+            setIsDone(true)
+            toast('คัดลอกแบบฝึกสำเร็จ!', 'success')
+            setTimeout(() => {
+                router.push(`/routines/${res.newRoutineId}`)
+            }, 1000)
         }
     }
 
     return (
         <button
             onClick={handleClone}
-            disabled={loading}
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-rose-600 dark:hover:bg-rose-700 disabled:opacity-50 text-white font-black px-8 py-4 rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/30 dark:shadow-[0_4px_15px_rgba(225,29,72,0.3)] dark:hover:shadow-[0_6px_20px_rgba(225,29,72,0.5)] text-sm tracking-wide w-full sm:w-auto"
+            disabled={isCloning || isDone}
+            className="w-full bg-blue-600 dark:bg-red-600 hover:bg-blue-700 dark:hover:bg-red-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
         >
-            {loading ? (
-                <><span className="animate-spin">⏳</span> กำลัง Clone...</>
+            {isCloning ? (
+                <Loader2 size={20} className="animate-spin" />
+            ) : isDone ? (
+                <Check size={20} />
             ) : (
-                <><span>📋</span> {isLoggedIn ? 'Clone ตารางนี้ไปยังบัญชีของฉัน' : 'เข้าสู่ระบบเพื่อ Clone'}</>
+                <Copy size={20} />
             )}
+            {isCloning ? 'กำลังคัดลอก...' : isDone ? 'คัดลอกแล้ว!' : 'คัดลอกตารางนี้ไปใช้'}
         </button>
     )
 }

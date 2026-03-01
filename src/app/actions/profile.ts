@@ -8,11 +8,11 @@ export async function upsertProfile(formData: FormData) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { error: 'กรุณาเข้าสู่ระบบก่อน' }
 
-    const name = formData.get('display_name')?.toString() || null
-    const goal = formData.get('goal')?.toString() || null
-    const height = formData.get('height') ? parseFloat(formData.get('height')!.toString()) : null
-    const experience_level = formData.get('experience_level')?.toString() || null
-    const avatar_url = formData.get('avatar_url')?.toString() || null
+    const name = formData.get('display_name')?.toString()
+    const goal = formData.get('goal')?.toString()
+    const heightValue = formData.get('height')?.toString()
+    const experience_level = formData.get('experience_level')?.toString()
+    const avatar_url = formData.get('avatar_url')?.toString()
 
     // Check if profile already exists
     const { data: existing } = await supabase
@@ -23,17 +23,31 @@ export async function upsertProfile(formData: FormData) {
 
     let error
     if (existing) {
-        // Update existing profile
+        // Update existing profile - ONLY provided fields
+        const updateData: any = {}
+        if (name !== undefined) updateData.name = name
+        if (goal !== undefined) updateData.goal = goal
+        if (experience_level !== undefined) updateData.experience_level = experience_level
+        if (avatar_url !== undefined) updateData.avatar_url = avatar_url
+        if (heightValue !== undefined) updateData.height = parseFloat(heightValue)
+
         const result = await supabase
             .from('profiles')
-            .update({ name, goal, height, experience_level, avatar_url })
+            .update(updateData)
             .eq('id', user.id)
         error = result.error
     } else {
         // Insert new profile
         const result = await supabase
             .from('profiles')
-            .insert({ id: user.id, name, goal, height, experience_level, avatar_url })
+            .insert({
+                id: user.id,
+                name: name || null,
+                goal: goal || null,
+                height: heightValue ? parseFloat(heightValue) : null,
+                experience_level: experience_level || null,
+                avatar_url: avatar_url || null
+            })
         error = result.error
     }
 

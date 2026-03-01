@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getGoals, getCurrentBestForExercise, getBodyGoal } from '../actions/goals'
 import { GoalsClient } from './GoalsClient'
 import Link from 'next/link'
+import { ChevronLeft, Target } from 'lucide-react'
 
 async function getExercises() {
     const supabase = await createClient()
@@ -28,9 +29,13 @@ export default async function GoalsPage() {
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-8 animate-fade-in-up">
-                    <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50">← กลับหน้าหลัก</Link>
+                    <Link href="/" className="text-sm font-bold text-blue-600 dark:text-red-400 hover:underline mb-2 block transition-colors w-fit px-3 py-1.5 rounded-lg hover:bg-white/50 hover:dark:bg-zinc-900/50 flex items-center gap-1">
+                        <ChevronLeft size={14} /> กลับหน้าหลัก
+                    </Link>
                     <div className="flex items-center justify-between">
-                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic">🎯 เป้าหมาย</h1>
+                        <h1 className="text-4xl font-black gradient-text tracking-tight uppercase italic flex items-center gap-2">
+                            <Target className="text-blue-500 dark:text-red-500" /> เป้าหมาย
+                        </h1>
                         {total > 0 && (
                             <div className="bg-white/70 dark:bg-zinc-900 shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 backdrop-blur-md px-5 py-2.5 rounded-2xl text-center">
                                 <div className="text-2xl font-black text-green-600 dark:text-green-500 drop-shadow-sm">{achieved}/{total}</div>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { addWeightLog } from '@/app/actions/profile'
 import { useToast } from '@/app/components/Toast'
+import { Scale, Check, Loader2 } from 'lucide-react'
 
 const inputClass = "w-full px-4 py-3 border border-gray-300 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-green-500 dark:focus:ring-red-500/50 dark:focus:border-red-500 outline-none transition-all bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-600 shadow-sm"
 
@@ -39,10 +40,11 @@ export function WeightLogForm() {
             </div>
             <div className="flex items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
                 <button type="submit" disabled={loading}
-                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-sm transition-all duration-300 whitespace-nowrap dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                    {loading ? 'บันทึก...' : '+ บันทึกน้ำหนัก'}
+                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white font-bold px-6 py-3 rounded-xl text-sm shadow-sm transition-all duration-300 whitespace-nowrap dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] flex items-center justify-center gap-2">
+                    {loading ? <Loader2 size={18} className="animate-spin" /> : <Scale size={18} />}
+                    {loading ? 'บันทึก...' : 'บันทึกน้ำหนัก'}
                 </button>
-                {saved && <span className="text-green-500 dark:text-green-400 text-sm font-bold">✅</span>}
+                {saved && <span className="text-green-500 dark:text-green-400 text-sm font-bold animate-fade-in-up"><Check size={18} /></span>}
             </div>
         </form>
     )

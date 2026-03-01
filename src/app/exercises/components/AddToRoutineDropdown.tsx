@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { addExerciseToRoutine } from '@/app/actions/routine'
+import { Plus, CheckCircle2, Loader2 } from 'lucide-react'
 
 interface Routine {
     id: string
@@ -54,10 +55,13 @@ export function AddToRoutineDropdown({ exerciseId, userRoutines }: { exerciseId:
             </select>
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
                 <button onClick={handleAdd} disabled={!selectedRoutine || loading}
-                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white px-6 py-3.5 rounded-2xl text-sm font-black uppercase tracking-wider transition-all shadow-sm dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                    {loading ? 'กำลังเพิ่ม...' : '+ เพิ่ม'}
+                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white px-6 py-3.5 rounded-2xl text-sm font-black uppercase tracking-wider transition-all shadow-sm dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] flex items-center justify-center gap-2">
+                    {loading ? <Loader2 size={18} className="animate-spin" /> : <Plus size={18} />}
+                    {loading ? 'กำลังเพิ่ม...' : 'เพิ่ม'}
                 </button>
-                {added && <span className="text-green-600 dark:text-green-400 text-xs font-bold animate-fade-in-up whitespace-nowrap bg-green-50 dark:bg-green-950/40 px-3 py-1.5 rounded-lg border border-green-200 dark:border-green-900/50 shadow-sm uppercase tracking-wide">✅ เพิ่มแล้ว</span>}
+                {added && <span className="text-green-600 dark:text-green-400 text-xs font-bold animate-fade-in-up whitespace-nowrap bg-green-50 dark:bg-green-950/40 px-3 py-1.5 rounded-lg border border-green-200 dark:border-green-900/50 shadow-sm uppercase tracking-wide flex items-center gap-1.5">
+                    <CheckCircle2 size={14} /> เพิ่มแล้ว
+                </span>}
             </div>
         </div>
     )

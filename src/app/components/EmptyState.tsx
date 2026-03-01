@@ -9,11 +9,11 @@ interface EmptyStateProps {
     actionHref?: string
 }
 
-export function EmptyState({ title, description, icon = '📭', actionText, actionHref }: EmptyStateProps) {
+export function EmptyState({ title, description, icon, actionText, actionHref }: EmptyStateProps) {
     return (
         <div className="flex flex-col items-center justify-center p-8 md:p-12 text-center bg-white/50 dark:bg-zinc-900/50 rounded-3xl border border-dashed border-gray-300 dark:border-zinc-700 animate-fade-in">
-            <div className="w-20 h-20 text-4xl bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-5 shadow-inner">
-                {icon}
+            <div className="w-20 h-20 text-4xl bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-5 shadow-inner text-gray-400 dark:text-zinc-600">
+                {icon || <span className="opacity-50 italic text-2xl">?</span>}
             </div>
             <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 mb-2 tracking-tight">{title}</h3>
             <p className="text-sm font-medium text-gray-500 dark:text-zinc-400 max-w-sm mb-8 leading-relaxed">

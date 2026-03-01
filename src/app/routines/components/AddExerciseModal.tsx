@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { addExerciseToRoutine } from '@/app/actions/routine'
 import { useToast } from '@/app/components/Toast'
+import { Search, Plus, X, Loader2, Dumbbell } from 'lucide-react'
 
 interface Exercise {
     id: string
@@ -56,7 +57,7 @@ export function AddExerciseModal({
         if (res?.error) {
             toast(res.error, 'error')
         } else {
-            toast('เพิ่มท่าออกกำลังกายเรียบร้อย! ✨', 'success')
+            toast('เพิ่มท่าออกกำลังกายเรียบร้อย!', 'success')
             router.refresh() // The parent component (page) will refresh to show the new exercise
         }
     }
@@ -68,21 +69,25 @@ export function AddExerciseModal({
             <div className="relative bg-white dark:bg-zinc-900 rounded-3xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 animate-fade-in-up border border-gray-100 dark:border-zinc-800 m-auto mt-16 sm:mt-auto flex flex-col max-h-[80vh]">
                 <div className="flex justify-between items-center mb-6 shrink-0">
                     <h2 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight flex items-center gap-2">
-                        <span className="text-blue-500 dark:text-red-500">+</span> เพิ่มท่าลงตารางฝึก
+                        <Dumbbell size={24} className="text-blue-500 dark:text-red-500" />
+                        เพิ่มท่าลงตารางฝึก
                     </h2>
                     <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors bg-gray-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 rounded-full w-8 h-8 flex items-center justify-center">
-                        ×
+                        <X size={18} />
                     </button>
                 </div>
 
                 <div className="mb-6 shrink-0">
-                    <input
-                        type="text"
-                        placeholder="🔍 ค้นหาชื่อท่า หรือ กลุ่มกล้ามเนื้อ..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full px-4 py-3.5 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500/50 dark:focus:border-red-500 bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 outline-none transition-all placeholder-gray-400 dark:placeholder-zinc-600 shadow-sm"
-                    />
+                    <div className="relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-600" size={18} />
+                        <input
+                            type="text"
+                            placeholder="ค้นหาชื่อท่า หรือ กลุ่มกล้ามเนื้อ..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3.5 border border-gray-300 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500/50 dark:focus:border-red-500 bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 outline-none transition-all placeholder-gray-400 dark:placeholder-zinc-600 shadow-sm"
+                        />
+                    </div>
                 </div>
 
                 <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar">
@@ -111,9 +116,10 @@ export function AddExerciseModal({
                                                 <button
                                                     onClick={() => handleAddExercise(ex.id)}
                                                     disabled={loading}
-                                                    className="bg-white dark:bg-zinc-800 text-blue-600 dark:text-red-400 hover:bg-blue-50 dark:hover:bg-red-950/30 border border-gray-200 dark:border-zinc-700 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-50"
+                                                    className="bg-white dark:bg-zinc-800 text-blue-600 dark:text-red-400 hover:bg-blue-50 dark:hover:bg-red-950/30 border border-gray-200 dark:border-zinc-700 px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors disabled:opacity-50 flex items-center gap-1.5"
                                                 >
-                                                    + เพิ่ม
+                                                    {loading ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                                                    เพิ่ม
                                                 </button>
                                             </li>
                                         ))}

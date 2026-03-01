@@ -3,6 +3,7 @@
 import { addExercise } from '@/app/actions/exercise'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Plus, Dumbbell, Type, FileText, Video, Save, Loader2 } from 'lucide-react'
 
 const inputClass = "w-full px-4 py-2 border border-gray-300 dark:border-zinc-800 rounded-md focus:ring-2 focus:ring-blue-500 dark:focus:ring-red-500/50 outline-none transition text-sm bg-white dark:bg-zinc-950/50 text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-500"
 const labelClass = "block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-1"
@@ -30,13 +31,15 @@ export function AddExerciseForm() {
 
     return (
         <div className="bg-white/70 dark:bg-zinc-900 p-6 sm:p-8 rounded-3xl shadow-sm dark:shadow-md border border-white/40 dark:border-zinc-800 mb-8 backdrop-blur-md">
-            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-zinc-100 flex items-center gap-2">
-                <span className="text-blue-500 dark:text-red-500">+</span> เพิ่มท่าออกกำลังกายใหม่
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-zinc-100 flex items-center gap-2 tracking-tight">
+                <Plus size={24} className="text-blue-500 dark:text-red-500" /> เพิ่มท่าออกกำลังกายใหม่
             </h2>
             <form id="add-exercise-form" action={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label className={labelClasses}>ชื่อท่า</label>
+                        <label className={labelClasses}>
+                            <Dumbbell size={14} className="inline mr-1" /> ชื่อท่า
+                        </label>
                         <input type="text" name="name" required className={inputClasses} placeholder="เช่น Barbell Bench Press" />
                     </div>
                     <div>
@@ -53,15 +56,16 @@ export function AddExerciseForm() {
                     </div>
                 </div>
                 <div>
-                    <label className={labelClasses}>
-                        วิดีโอตัวอย่าง (YouTube URL) <span className="text-gray-400 dark:text-zinc-600 font-normal ml-1">(ไม่บังคับ)</span>
+                    <label className={labelClasses + " flex items-center gap-1"}>
+                        <Video size={14} /> วิดีโอตัวอย่าง (YouTube URL) <span className="text-gray-400 dark:text-zinc-600 font-normal ml-1">(ไม่บังคับ)</span>
                     </label>
                     <input type="url" name="youtube_url" className={inputClasses} placeholder="https://www.youtube.com/watch?v=..." />
                 </div>
                 <div className="flex justify-end pt-4">
                     <button type="submit" disabled={loading}
-                        className="bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all duration-300 disabled:opacity-50 text-sm shadow-sm hover:shadow-md dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                        {loading ? 'กำลังบันทึก...' : '+ เพิ่มข้อมูล'}
+                        className="bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all duration-300 disabled:opacity-50 text-sm shadow-sm hover:shadow-md dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] flex items-center gap-2">
+                        {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {loading ? 'กำลังบันทึก...' : 'เพิ่มข้อมูล'}
                     </button>
                 </div>
             </form>

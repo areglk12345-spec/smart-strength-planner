@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { AlertTriangle } from 'lucide-react'
 import { savePushSubscription, deletePushSubscription } from '../actions/push'
 
 // Helper to convert base64 to Uint8Array for VAPID key
@@ -98,8 +99,9 @@ export function PushNotificationToggle() {
 
     if (!isSupported) {
         return (
-            <div className="text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/10 p-3 rounded-lg mt-4">
-                ⚠️ เบราว์เซอร์ของคุณไม่รองรับการแจ้งเตือน (Push Notifications)
+            <div className="text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/10 p-4 rounded-xl mt-4 flex items-center gap-2 border border-red-100 dark:border-red-900/20 shadow-sm">
+                <AlertTriangle size={16} className="shrink-0" />
+                <span>เบราว์เซอร์ของคุณไม่รองรับการแจ้งเตือน (Push Notifications)</span>
             </div>
         )
     }

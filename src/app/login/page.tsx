@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { LogIn, Mail, Lock, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -44,26 +45,28 @@ export default function LoginPage() {
       </div>
       <div className="max-w-md w-full bg-white/70 dark:bg-zinc-900/80 rounded-3xl shadow-xl p-8 sm:p-10 border border-white/50 dark:border-zinc-800 backdrop-blur-md animate-fade-in-up">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-blue-600 dark:text-red-500 mb-2 gradient-text uppercase tracking-tight italic drop-shadow-sm">
+          <div className="flex justify-center mb-1">
+            <LogIn size={40} className="text-blue-600 dark:text-red-500" />
+          </div>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-zinc-100 mb-2 gradient-text uppercase tracking-tight italic drop-shadow-sm">
             เข้าสู่ระบบ
           </h1>
-          <p className="text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-widest text-xs mt-3 bg-gray-100 dark:bg-zinc-800 inline-block px-3 py-1 rounded-lg">
+          <p className="text-gray-500 dark:text-zinc-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs mt-3 bg-gray-100 dark:bg-zinc-800 inline-block px-3 py-1 rounded-lg">
             Smart Strength Training Planner
           </p>
         </div>
 
-        {message.text && (
-          <div
-            className={`p-4 mb-6 rounded-2xl text-sm font-bold shadow-sm border ${message.type === "error" ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/30" : "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30"}`}
-          >
-            {message.type === "error" ? "⚠️ " : "✅ "}{message.text}
-          </div>
-        )}
+        <div
+          className={`p-4 mb-6 rounded-2xl text-sm font-bold shadow-sm border flex items-center gap-3 ${message.type === "error" ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-red-200 dark:border-red-900/30" : "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400 border-green-200 dark:border-green-900/30"}`}
+        >
+          {message.type === "error" ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+          {message.text}
+        </div>
 
         <form className="space-y-5" onSubmit={handleLogin}>
           <div>
-            <label className="block text-sm font-black text-gray-700 dark:text-zinc-300 mb-1.5 uppercase tracking-wide">
-              อีเมล
+            <label className="block text-sm font-black text-gray-700 dark:text-zinc-300 mb-1.5 uppercase tracking-wide flex items-center gap-2">
+              <Mail size={14} className="text-gray-400" /> อีเมล
             </label>
             <input
               type="email"
@@ -76,8 +79,8 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-black text-gray-700 dark:text-zinc-300 mb-1.5 uppercase tracking-wide">
-              รหัสผ่าน
+            <label className="block text-sm font-black text-gray-700 dark:text-zinc-300 mb-1.5 uppercase tracking-wide flex items-center gap-2">
+              <Lock size={14} className="text-gray-400" /> รหัสผ่าน
             </label>
             <input
               type="password"
@@ -93,8 +96,9 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-black py-4 px-4 rounded-2xl transition-all shadow-md dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] disabled:opacity-50 mt-8 uppercase tracking-widest text-sm"
+            className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-red-600 dark:hover:bg-red-700 text-white font-black py-4 px-4 rounded-2xl transition-all shadow-md dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] disabled:opacity-50 mt-8 uppercase tracking-widest text-sm flex items-center justify-center gap-2"
           >
+            {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
             {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>
 

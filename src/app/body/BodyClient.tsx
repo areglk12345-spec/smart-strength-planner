@@ -6,6 +6,7 @@ import { useToast } from '@/app/components/Toast'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import Image from 'next/image'
 import { createClient } from '@/utils/supabase/client'
+import { Ruler, Camera, ChevronDown, Plus, X, Trash2, Loader2, Save, BarChart3, Weight, TrendingUp, History, Image as ImageIcon } from 'lucide-react'
 
 type Measurement = {
     id: string
@@ -63,7 +64,7 @@ export function BodyClient({
             const res = await addMeasurement(formData)
             if (res.error) toast(res.error, 'error')
             else {
-                toast('บันทึกสัดส่วนเรียบร้อย! 💪', 'success')
+                toast('บันทึกสัดส่วนเรียบร้อย!', 'success')
                 setShowForm(false)
                     ; (e.target as HTMLFormElement).reset()
             }
@@ -109,7 +110,7 @@ export function BodyClient({
 
             if (insertError) throw insertError
             setPhotos(prev => [newPhoto, ...prev])
-            toast('อัปโหลดรูปเรียบร้อย! 📸', 'success')
+            toast('อัปโหลดรูปเรียบร้อย!', 'success')
         } catch {
             toast('เกิดข้อผิดพลาดในการอัปโหลด', 'error')
         } finally {
@@ -140,7 +141,10 @@ export function BodyClient({
             {latestMeasurement && (
                 <div className="bg-gradient-to-br from-emerald-500/10 to-teal-600/10 dark:from-zinc-900 dark:to-black rounded-3xl p-6 border border-emerald-200/40 dark:border-red-500/20 shadow-sm relative overflow-hidden">
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 dark:bg-red-500/10 rounded-full blur-2xl pointer-events-none" />
-                    <p className="text-xs font-bold text-emerald-600 dark:text-red-400 uppercase tracking-widest mb-3">📊 สัดส่วนล่าสุด — {new Date(latestMeasurement.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p className="text-xs font-bold text-emerald-600 dark:text-red-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <BarChart3 size={14} />
+                        สัดส่วนล่าสุด — {new Date(latestMeasurement.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
                     <div className="flex flex-wrap gap-4">
                         {latestMeasurement.weight && (
                             <div className="text-center">
@@ -185,17 +189,18 @@ export function BodyClient({
             {/* Tabs */}
             <div className="flex gap-2 bg-gray-100 dark:bg-zinc-900 p-1.5 rounded-2xl">
                 {([
-                    { key: 'measurements', label: '📏 สัดส่วนร่างกาย' },
-                    { key: 'photos', label: '📸 รูปพัฒนาการ' },
-                ] as { key: Tab; label: string }[]).map(t => (
+                    { key: 'measurements', label: 'สัดส่วนร่างกาย', icon: Ruler },
+                    { key: 'photos', label: 'รูปพัฒนาการ', icon: Camera },
+                ] as { key: Tab; label: string; icon: any }[]).map(t => (
                     <button
                         key={t.key}
                         onClick={() => setTab(t.key)}
-                        className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${tab === t.key
+                        className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${tab === t.key
                             ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-zinc-100 shadow-sm'
                             : 'text-gray-500 dark:text-zinc-500 hover:text-gray-700 dark:hover:text-zinc-300'
                             }`}
                     >
+                        <t.icon size={16} />
                         {t.label}
                     </button>
                 ))}
@@ -207,7 +212,10 @@ export function BodyClient({
                     {/* Weight & Body Fat Chart */}
                     {chartData.length >= 2 && (
                         <div className="bg-white/70 dark:bg-zinc-900 p-6 rounded-3xl border border-white/40 dark:border-zinc-800 shadow-sm">
-                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-4">📈 กราฟน้ำหนัก</h2>
+                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 mb-4 flex items-center gap-2">
+                                <TrendingUp size={20} className="text-emerald-500 dark:text-red-500" />
+                                กราฟน้ำหนัก
+                            </h2>
                             <ResponsiveContainer width="100%" height={200}>
                                 <LineChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:[&_line]:stroke-zinc-800" />
@@ -228,9 +236,10 @@ export function BodyClient({
                     {/* Add Entry Button */}
                     <button
                         onClick={() => setShowForm(!showForm)}
-                        className="w-full py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 dark:bg-red-700 dark:hover:bg-red-600 text-white transition-colors shadow-sm"
+                        className="w-full py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 dark:bg-red-700 dark:hover:bg-red-600 text-white transition-all shadow-sm flex items-center justify-center gap-2"
                     >
-                        {showForm ? '✕ ยกเลิก' : '+ บันทึกสัดส่วนใหม่'}
+                        {showForm ? <X size={18} /> : <Plus size={18} />}
+                        {showForm ? 'ยกเลิก' : 'บันทึกสัดส่วนใหม่'}
                     </button>
 
                     {/* Add Entry Form */}
@@ -239,7 +248,10 @@ export function BodyClient({
                             onSubmit={handleAddMeasurement}
                             className="bg-white/70 dark:bg-zinc-900 p-6 rounded-3xl border border-white/40 dark:border-zinc-800 shadow-sm space-y-5"
                         >
-                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100">📝 บันทึกสัดส่วนวันนี้</h2>
+                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+                                <Plus size={20} className="text-emerald-500 dark:text-red-500" />
+                                บันทึกสัดส่วนวันนี้
+                            </h2>
 
                             <div>
                                 <label className={labelCls}>วันที่</label>
@@ -277,8 +289,9 @@ export function BodyClient({
                                 </div>
                             </div>
 
-                            <button type="submit" disabled={isPending} className="w-full py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 dark:bg-red-700 dark:hover:bg-red-600 text-white transition-colors disabled:opacity-50">
-                                {isPending ? '⏳ กำลังบันทึก...' : '💾 บันทึก'}
+                            <button type="submit" disabled={isPending} className="w-full py-3 rounded-2xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 dark:bg-red-700 dark:hover:bg-red-600 text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                                {isPending ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                                {isPending ? 'กำลังบันทึก...' : 'บันทึก'}
                             </button>
                         </form>
                     )}
@@ -286,13 +299,18 @@ export function BodyClient({
                     {/* Measurement History */}
                     {measurements.length === 0 ? (
                         <div className="bg-white/70 dark:bg-zinc-900 p-12 rounded-3xl border border-white/40 dark:border-zinc-800 text-center">
-                            <div className="text-5xl opacity-40 mb-4">📏</div>
+                            <div className="flex justify-center mb-4">
+                                <Ruler size={48} className="text-gray-300 dark:text-zinc-700" />
+                            </div>
                             <p className="font-bold text-gray-600 dark:text-zinc-400">ยังไม่มีข้อมูลสัดส่วน</p>
                             <p className="text-sm text-gray-400 dark:text-zinc-500 mt-1">เริ่มบันทึกวันนี้เพื่อดูพัฒนาการของคุณ!</p>
                         </div>
                     ) : (
                         <div className="space-y-3">
-                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100">🗂️ ประวัติสัดส่วน</h2>
+                            <h2 className="text-lg font-black text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+                                <History size={20} className="text-emerald-500 dark:text-red-500" />
+                                ประวัติสัดส่วน
+                            </h2>
                             {measurements.map(m => (
                                 <div key={m.id} className="bg-white/70 dark:bg-zinc-900 p-5 rounded-2xl border border-white/40 dark:border-zinc-800 shadow-sm flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
@@ -308,7 +326,9 @@ export function BodyClient({
                                             {m.legs && <span className="bg-gray-50 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 px-3 py-1 rounded-xl text-xs font-semibold">ต้นขา {m.legs} cm</span>}
                                         </div>
                                     </div>
-                                    <button onClick={() => handleDeleteMeasurement(m.id)} disabled={isPending} className="text-gray-300 dark:text-zinc-700 hover:text-red-500 dark:hover:text-red-400 transition-colors text-xs font-semibold shrink-0">🗑️</button>
+                                    <button onClick={() => handleDeleteMeasurement(m.id)} disabled={isPending} className="text-gray-300 dark:text-zinc-700 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0">
+                                        <Trash2 size={16} />
+                                    </button>
                                 </div>
                             ))}
                         </div>
@@ -322,9 +342,11 @@ export function BodyClient({
                     {/* Upload Button */}
                     <div
                         onClick={() => fileRef.current?.click()}
-                        className="border-2 border-dashed border-gray-200 dark:border-zinc-700 hover:border-emerald-400 dark:hover:border-red-500 rounded-3xl p-10 flex flex-col items-center justify-center gap-3 cursor-pointer text-center transition-colors group"
+                        className="border-2 border-dashed border-gray-200 dark:border-zinc-700 hover:border-emerald-400 dark:hover:border-red-500 rounded-3xl p-10 flex flex-col items-center justify-center gap-3 cursor-pointer text-center transition-all group"
                     >
-                        <div className="text-4xl group-hover:scale-110 transition-transform">{isUploading ? '⏳' : '📸'}</div>
+                        <div className="transition-transform group-hover:scale-110">
+                            {isUploading ? <Loader2 size={48} className="animate-spin text-emerald-500 dark:text-red-500" /> : <Camera size={48} className="text-gray-300 dark:text-zinc-700" />}
+                        </div>
                         <p className="font-bold text-gray-600 dark:text-zinc-400">{isUploading ? 'กำลังอัปโหลด...' : 'กดเพื่ออัปโหลดรูปพัฒนาการ'}</p>
                         <p className="text-xs text-gray-400 dark:text-zinc-600">รองรับ JPG, PNG, WEBP</p>
                         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} disabled={isUploading} />
@@ -333,7 +355,9 @@ export function BodyClient({
                     {/* Photo Gallery */}
                     {photos.length === 0 ? (
                         <div className="bg-white/70 dark:bg-zinc-900 p-12 rounded-3xl border border-white/40 dark:border-zinc-800 text-center">
-                            <div className="text-5xl opacity-40 mb-4">🖼️</div>
+                            <div className="flex justify-center mb-4">
+                                <ImageIcon size={48} className="text-gray-300 dark:text-zinc-700" />
+                            </div>
                             <p className="font-bold text-gray-600 dark:text-zinc-400">ยังไม่มีรูปถ่ายพัฒนาการ</p>
                             <p className="text-sm text-gray-400 dark:text-zinc-500 mt-1">อัปโหลดรูปด้านบนเพื่อบันทึกก้าวหน้าของคุณ!</p>
                         </div>
@@ -354,7 +378,8 @@ export function BodyClient({
                         </div>
                     )}
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }

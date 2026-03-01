@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AddExerciseModal } from '../components/AddExerciseModal'
+import { Plus } from 'lucide-react'
 
 interface Exercise {
     id: string
@@ -25,9 +26,9 @@ export function AddExerciseModalHandler({
         <>
             <button
                 onClick={() => setIsModalOpen(true)}
-                className="text-sm font-bold text-gray-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 px-5 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap"
+                className="text-sm font-bold text-gray-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 px-5 py-2.5 rounded-xl transition-colors shadow-sm whitespace-nowrap flex items-center gap-1.5"
             >
-                + เพิ่มท่า
+                <Plus size={16} /> เพิ่มท่า
             </button>
 
             <AddExerciseModal

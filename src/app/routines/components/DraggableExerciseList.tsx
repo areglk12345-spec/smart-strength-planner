@@ -120,11 +120,9 @@ export function DraggableExerciseList({
         return (
             <div className="bg-gray-50/50 dark:bg-zinc-950/30 p-12 rounded-2xl text-center border-2 border-dashed border-gray-300 dark:border-zinc-800">
                 <p className="text-gray-500 dark:text-zinc-500 mb-4 font-medium">ยังไม่ได้เพิ่มท่าออกกำลังกายในตารางนี้</p>
-                {isOwner && (
-                    <div className="text-blue-600 dark:text-red-400 font-bold">
-                        คลิกปุ่ม "+ เพิ่มท่า" ด้านบนเพื่อเลือกท่าเข้าตาราง
-                    </div>
-                )}
+                <div className="text-blue-600 dark:text-red-400 font-bold flex items-center justify-center gap-1.5">
+                    คลิกปุ่ม "+ เพิ่มท่า" ด้านบนเพื่อเลือกท่าเข้าตาราง
+                </div>
             </div>
         );
     }

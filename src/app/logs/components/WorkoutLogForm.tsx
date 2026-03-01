@@ -7,6 +7,7 @@ import { createWorkoutLog } from '@/app/actions/log'
 import { PRCelebration } from '@/app/components/PRCelebration'
 import { useToast } from '@/app/components/Toast'
 import { RestTimer } from './RestTimer'
+import { Dumbbell, Plus, Trash2, CheckCircle2, Save, X, Loader2, Calendar, MessageSquare } from 'lucide-react'
 
 interface ExerciseType { id: string; name: string }
 interface LoggedExercise { exercise_id: string; name: string; sets: number; reps: number; weight: number }
@@ -91,21 +92,27 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-gray-100 dark:border-zinc-800 pb-8">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-zinc-400 mb-2">วันที่ฝึก (Date)</label>
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-zinc-400 mb-2 flex items-center gap-2">
+                            <Calendar size={14} /> วันที่ฝึก (Date)
+                        </label>
                         <input type="date" value={date} onChange={e => setDate(e.target.value)} required className={inputClass} />
                     </div>
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-zinc-400 mb-2">บันทึกเพิ่มเติม <span className="text-gray-400 dark:text-zinc-500 font-normal">(เลือกได้)</span></label>
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-zinc-400 mb-2 flex items-center gap-2">
+                            <MessageSquare size={14} /> บันทึกเพิ่มเติม <span className="text-gray-400 dark:text-zinc-500 font-normal">(เลือกได้)</span>
+                        </label>
                         <input type="text" value={notes} onChange={e => setNotes(e.target.value)} placeholder="รู้สึกยังไงวันนี้..." className={inputClass} />
                     </div>
                 </div>
 
                 <div className="mb-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 flex items-center gap-2"><span>💪</span> ท่าที่ฝึกในวันนี้</h3>
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-zinc-100 flex items-center gap-2">
+                            <Dumbbell size={24} className="text-blue-600 dark:text-red-500" /> ท่าที่ฝึกในวันนี้
+                        </h3>
                         <button type="button" onClick={addExerciseRow}
-                            className="text-sm bg-blue-50 dark:bg-red-950/30 text-blue-600 dark:text-red-400 hover:bg-blue-100 dark:hover:bg-red-900/50 border border-transparent dark:border-red-900/30 px-4 py-2 rounded-xl font-bold transition-colors">
-                            + เพิ่มท่า
+                            className="text-sm bg-blue-50 dark:bg-red-950/30 text-blue-600 dark:text-red-400 hover:bg-blue-100 dark:hover:bg-red-900/50 border border-transparent dark:border-red-900/30 px-4 py-2 rounded-xl font-bold transition-colors flex items-center gap-2">
+                            <Plus size={16} /> ท่าออกกำลังกาย
                         </button>
                     </div>
 
@@ -137,12 +144,12 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
                                     </div>
                                     <div className="flex gap-2 w-full md:w-auto">
                                         <button type="button" onClick={handleSetComplete}
-                                            className="flex-1 md:flex-none px-4 py-2.5 bg-blue-50 dark:bg-indigo-900/40 text-blue-600 dark:text-indigo-400 hover:bg-blue-100 dark:hover:bg-indigo-800/60 rounded-xl text-sm font-bold transition-colors border border-transparent dark:border-indigo-800/50">
-                                            ✓ จบเซ็ต
+                                            className="flex-1 md:flex-none px-4 py-2.5 bg-blue-50 dark:bg-indigo-900/40 text-blue-600 dark:text-indigo-400 hover:bg-blue-100 dark:hover:bg-indigo-800/60 rounded-xl text-sm font-bold transition-colors border border-transparent dark:border-indigo-800/50 flex items-center gap-1.5 justify-center">
+                                            <CheckCircle2 size={16} /> จบเซ็ต
                                         </button>
                                         <button type="button" onClick={() => removeExerciseRow(idx)}
-                                            className="px-4 py-2.5 bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-xl text-sm font-bold transition-colors border border-transparent dark:border-red-900/30">
-                                            ลบ
+                                            className="px-4 py-2.5 bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-xl text-sm font-bold transition-colors border border-transparent dark:border-red-900/30 flex items-center gap-1.5">
+                                            <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
@@ -157,8 +164,9 @@ export function WorkoutLogForm({ routineId, initialExercises, allExercises }: {
                         ยกเลิก
                     </Link>
                     <button type="submit" disabled={loading || exercises.length === 0}
-                        className="px-8 py-3 bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl shadow-sm transition-all duration-300 text-sm shadow-green-500/20 dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)]">
-                        {loading ? '⏳ กำลังบันทึก...' : 'บันทึกสถิติ ✅'}
+                        className="px-8 py-3 bg-green-600 hover:bg-green-700 dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 text-white font-bold rounded-xl shadow-sm transition-all duration-300 text-sm shadow-green-500/20 dark:shadow-[0_4px_15px_rgba(220,38,38,0.2)] dark:hover:shadow-[0_6px_20px_rgba(220,38,38,0.4)] flex items-center gap-2">
+                        {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                        {loading ? 'กำลังบันทึก...' : 'บันทึกสถิติ'}
                     </button>
                 </div>
             </form>

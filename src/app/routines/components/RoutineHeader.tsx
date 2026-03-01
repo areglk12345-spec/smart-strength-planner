@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Pencil } from 'lucide-react'
 import { EditRoutineModal } from './EditRoutineModal'
 
 export function RoutineHeader({
@@ -35,7 +36,7 @@ export function RoutineHeader({
                         className="absolute top-6 right-6 text-gray-400 dark:text-zinc-500 hover:text-blue-600 dark:hover:text-red-400 p-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/30 transition-all opacity-0 group-hover:opacity-100"
                         title="แก้ไขตารางฝึก"
                     >
-                        ✏️
+                        <Pencil size={18} />
                     </button>
                 )}
             </div>

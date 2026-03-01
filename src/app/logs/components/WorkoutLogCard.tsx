@@ -5,6 +5,7 @@ import { deleteWorkoutLog } from '@/app/actions/log'
 import { useToast } from '@/app/components/Toast'
 import { ConfirmModal } from '@/app/components/ConfirmModal'
 import { EditLogModal } from './EditLogModal'
+import { Pencil, Trash2, Calendar, ClipboardList } from 'lucide-react'
 
 interface WorkoutLog {
     id: string
@@ -64,10 +65,13 @@ export function WorkoutLogCard({ log }: { log: WorkoutLog }) {
 
             <div className="flex flex-col md:flex-row justify-between md:items-start mb-6 border-b border-gray-100 dark:border-zinc-800 pb-4 relative">
                 <div>
-                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight">{formattedDate}</h3>
+                    <h3 className="text-xl font-black text-gray-900 dark:text-zinc-100 tracking-tight flex items-center gap-2">
+                        <Calendar size={20} className="text-blue-600 dark:text-red-500" />
+                        {formattedDate}
+                    </h3>
                     {routineName && (
-                        <div className="inline-block mt-3 text-xs font-bold text-blue-700 dark:text-red-400 bg-blue-50 dark:bg-red-950/30 border border-blue-100 dark:border-red-900/50 px-3 py-1.5 rounded-lg uppercase tracking-wider">
-                            ตาราง: {routineName}
+                        <div className="inline-block mt-3 text-xs font-bold text-blue-700 dark:text-red-400 bg-blue-50 dark:bg-red-950/30 border border-blue-100 dark:border-red-900/50 px-3 py-1.5 rounded-lg uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                            <ClipboardList size={12} /> ตาราง: {routineName}
                         </div>
                     )}
                 </div>
@@ -84,14 +88,14 @@ export function WorkoutLogCard({ log }: { log: WorkoutLog }) {
                         className="text-gray-400 hover:text-blue-600 dark:hover:text-red-400 p-2 rounded-xl hover:bg-blue-50 dark:hover:bg-red-950/40 transition-colors opacity-0 group-hover:opacity-100"
                         title="แก้ไขวัน/โน้ต"
                     >
-                        ✏️
+                        <Pencil size={18} />
                     </button>
                     <button
                         onClick={() => setIsDeleting(true)}
                         className="text-gray-400 hover:text-red-600 dark:hover:text-red-500 p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors opacity-0 group-hover:opacity-100"
                         title="ลบประวัติการฝึก"
                     >
-                        🗑️
+                        <Trash2 size={18} />
                     </button>
                 </div>
             </div>
